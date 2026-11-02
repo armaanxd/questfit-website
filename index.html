@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuestFit: your fitness journey is the main quest</title>
+  <meta name="description" content="QuestFit turns daily workouts into an RPG campaign. Clear quests, earn XP and rank up from E to S, one day at a time." />
+  <meta name="theme-color" content="#070812" />
+  <meta property="og:title" content="QuestFit" />
+  <meta property="og:description" content="Your fitness journey is the main quest." />
+  <meta property="og:image" content="assets/screen-dashboard.jpg" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Main">
+      <a class="logo" href="#top" aria-label="QuestFit home">Q<span>/</span>F</a>
+      <ul class="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#classes">Classes</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="play-slot play-slot--small" data-play></div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" id="top">
+      <div class="runes" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <h1 class="hero-title">
+          <span class="line">Your fitness</span>
+          <span class="line">journey is the</span>
+          <span class="line">main quest.</span>
+        </h1>
+        <p class="hero-lede">QuestFit turns daily workouts into an RPG campaign. Clear quests, earn XP and rank up from E to S, one day at a time.</p>
+        <div class="hero-actions">
+          <div class="play-slot" data-play></div>
+          <p class="hero-note">Coming to Android first. iPhone after.</p>
+        </div>
+      </div>
+      <figure class="phone hero-phone">
+        <img src="assets/screen-dashboard.jpg" width="390" height="844" alt="The QuestFit dashboard: a greeting, the day streak, XP and coins, and today's main quest at 67%." />
+      </figure>
+    </section>
+
+    <section class="demo" aria-labelledby="demo-title">
+      <div class="wrap demo-grid">
+        <div class="demo-copy">
+          <h2 id="demo-title">Try today's main quest.</h2>
+          <p>Every quest has a target, and the main quest only counts with proof: a workout from your watch, or the in-app timer. Start a session, fill the bar, collect the reward. This demo runs a minute every tenth of a second.</p>
+        </div>
+
+        <div class="demo-stage" data-stagger>
+          <div class="slime-wrap" aria-hidden="true">
+            <div class="slime" id="slime">
+              <i class="slime-eye slime-eye--l"></i><i class="slime-eye slime-eye--r"></i><i class="slime-mouth"></i>
+            </div>
+            <p class="slime-says" id="slime-says">Your main quest is waiting.</p>
+          </div>
+
+          <article class="quest" id="quest">
+            <div class="quest-head">
+              <span class="quest-icon" aria-hidden="true">⚔</span>
+              <div>
+                <p class="quest-kind">Main quest</p>
+                <h3>Break the Iron Gate</h3>
+              </div>
+              <p class="quest-reward">+100 XP<br />+20 coins</p>
+            </div>
+            <p class="quest-desc">Complete a focused strength session and clear the first gate.</p>
+            <div class="bar" role="progressbar" aria-label="Quest progress" aria-valuemin="0" aria-valuemax="30" aria-valuenow="0" id="quest-bar"><span></span></div>
+            <div class="quest-foot">
+              <p class="quest-count" id="quest-count">0 / 30 min</p>
+              <button class="btn btn--primary" type="button" id="quest-log">Start session</button>
+            </div>
+            <div class="reward" id="reward" aria-live="polite"></div>
+          </article>
+
+          <div class="xp" aria-label="Level progress">
+            <p><strong id="xp-level">Level 1</strong> <span id="xp-text">120 / 250 XP</span></p>
+            <div class="bar bar--xp"><span id="xp-fill" style="width:48%"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how wrap" id="how" aria-labelledby="how-title">
+      <h2 id="how-title">How a campaign works</h2>
+      <ol class="steps" data-stagger>
+        <li>
+          <h3>Choose your class</h3>
+          <p>Warrior, Ranger, Mage or All-Rounder. Your class decides your daily quests and the workouts we suggest, matched to your fitness level.</p>
+        </li>
+        <li>
+          <h3>Clear the daily board</h3>
+          <p>A main quest that protects your streak, two side quests, and a class trial. Steps and workouts sync from Health Connect, from your phone or a Galaxy Watch. No watch? The in-app timer counts. The board resets at midnight in your timezone.</p>
+        </li>
+        <li>
+          <h3>Grow your character</h3>
+          <p>Earn XP and coins, level up, and climb from E-Rank to S-Rank. Eight stats track how you actually train.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="classes" id="classes" aria-labelledby="classes-title">
+      <div class="wrap">
+        <h2 id="classes-title">Four ways to play</h2>
+        <ul class="class-list" data-stagger>
+          <li class="class class--warrior">
+            <span class="class-icon" aria-hidden="true">⚔</span>
+            <div class="class-body">
+              <h3>Warrior</h3>
+              <p class="class-focus">Strength</p>
+              <p>Daily main quest: 30 minutes of strength work to break the Iron Gate.</p>
+            </div>
+          </li>
+          <li class="class class--ranger">
+            <span class="class-icon" aria-hidden="true">➶</span>
+            <div class="class-body">
+              <h3>Ranger</h3>
+              <p class="class-focus">Endurance</p>
+              <p>Daily main quest: 20 minutes of cardio to run the Windline.</p>
+            </div>
+          </li>
+          <li class="class class--mage">
+            <span class="class-icon" aria-hidden="true">✦</span>
+            <div class="class-body">
+              <h3>Mage</h3>
+              <p class="class-focus">Mobility</p>
+              <p>Daily main quest: 20 minutes of mobility to channel the Leyline.</p>
+            </div>
+          </li>
+          <li class="class class--allrounder">
+            <span class="class-icon" aria-hidden="true">✹</span>
+            <div class="class-body">
+              <h3>All-Rounder</h3>
+              <p class="class-focus">Everything</p>
+              <p>Daily main quest: a 45-minute circuit. The hardest path, and the slowest to rank up.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stakes wrap" aria-labelledby="stakes-title">
+      <h2 id="stakes-title">You choose what a missed day costs.</h2>
+      <p class="stakes-lede">Stakes keep you coming back. Skip your main quest, or skip the app for a day, and it counts as missed. You set how high the stakes are, and you can change it anytime.</p>
+      <div class="modes" data-stagger>
+        <div class="mode mode--soft">
+          <h3>Soft</h3>
+          <p>Your streak pauses. Nothing else happens.</p>
+        </div>
+        <div class="mode mode--balanced">
+          <h3>Balanced</h3>
+          <p>Your streak resets, quests give 25% less XP until you clear your next main quest, and your character looks tired.</p>
+        </div>
+        <div class="mode mode--hardcore">
+          <h3>Hardcore</h3>
+          <p>Your streak resets, 50% less XP until your next main quest, you lose 5% of your coins, and your character is injured.</p>
+        </div>
+      </div>
+      <p class="stakes-safe">Penalties are always virtual: never real money, never public. A shield absorbs your first miss. Two rest days and two sick days a month protect your streak, no questions asked.</p>
+    </section>
+
+    <section class="screens" aria-labelledby="screens-title">
+      <div class="wrap">
+        <h2 id="screens-title">Inside the app</h2>
+      </div>
+      <div class="screen-strip wrap">
+        <figure>
+          <div class="phone"><img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="The quest board: the main quest at 20 of 30 minutes with a Timer badge and a Start session button." /></div>
+          <figcaption>The daily quest board</figcaption>
+        </figure>
+        <figure>
+          <div class="phone"><img src="assets/screen-stats.jpg" width="390" height="844" loading="lazy" alt="A radar chart of eight attributes such as strength, cardio and discipline." /></div>
+          <figcaption>Your stat sheet</figcaption>
+        </figure>
+        <figure>
+          <div class="phone"><img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="The character page showing class, rank and progress to the next rank." /></div>
+          <figcaption>Your character and rank</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="soon wrap" aria-labelledby="soon-title">
+      <h2 id="soon-title">Coming soon</h2>
+      <p class="soon-lede">Not in the app yet. This is what we're building next.</p>
+      <ul class="soon-list" data-stagger>
+        <li>
+          <h3>A character that grows with you</h3>
+          <p>Your avatar evolves with every rank, from rough leather at E-Rank to legendary gear at S-Rank. Male and female versions.</p>
+        </li>
+        <li>
+          <h3>Reminders you control</h3>
+          <p>A nudge when new quests are ready, when your main quest hasn't started, and before the day ends. You pick the times, and they run on your phone.</p>
+        </li>
+        <li>
+          <h3>Food log</h3>
+          <p>Snap a photo of your meal and get calories, protein, carbs and fat.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="faq wrap" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">Questions</h2>
+      <details>
+        <summary>Where is my data stored?</summary>
+        <p>On your phone. QuestFit has no accounts and doesn't send your campaign or your health data to a server. Read the <a href="privacy.html">privacy policy</a>.</p>
+      </details>
+      <details>
+        <summary>Do I need a smartwatch?</summary>
+        <p>No. Your phone counts your steps, and the in-app timer completes any main quest. A watch workout with heart rate counts as proof too.</p>
+      </details>
+      <details>
+        <summary>What if I'm sick or need rest?</summary>
+        <p>Use a rest day or a sick day. You get two of each every month, and they protect your streak with no penalty.</p>
+      </details>
+      <details>
+        <summary>Is QuestFit on iPhone?</summary>
+        <p>Android comes first. An iPhone version is planned.</p>
+      </details>
+      <details>
+        <summary>Is this medical advice?</summary>
+        <p>No. Workout suggestions are general guidance. Check with a doctor before starting a new training plan.</p>
+      </details>
+    </section>
+
+    <section class="cta wrap" aria-labelledby="cta-title">
+      <h2 id="cta-title">Start your campaign.</h2>
+      <div class="play-slot" data-play></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <a class="logo" href="#top" aria-label="QuestFit home">Q<span>/</span>F</a>
+      <a href="privacy.html">Privacy policy</a>
+      <p>© 2026 QuestFit</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
