@@ -75,6 +75,16 @@ if (motionOK && finePointer) {
   });
 }
 
+// ---------- Class icons play their hover animation once on touch screens ----------
+if (motionOK && !matchMedia("(hover: hover)").matches) {
+  const iconObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    setTimeout(() => entry.target.classList.add("is-played"), 500); // after the stagger reveal settles
+    iconObserver.unobserve(entry.target);
+  }), { threshold: .6 });
+  document.querySelectorAll(".class").forEach((el) => iconObserver.observe(el));
+}
+
 // ---------- FAQ answers slide open and closed ----------
 document.querySelectorAll(".faq details").forEach((details) => {
   const answer = details.querySelector("p");
