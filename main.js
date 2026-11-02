@@ -110,7 +110,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListene
 
 // ---------- Playable main quest ----------
 const TARGET = 30;
-const STEP = 10; // the slime reacts every 10 minutes
+const STEP = 10; // the guide reacts every 10 minutes
 const TICK_MS = 100; // one demo minute
 const QUEST_XP = 100;
 const QUEST_COINS = 20;
@@ -127,8 +127,19 @@ const bar = document.getElementById("quest-bar");
 const count = document.getElementById("quest-count");
 const button = document.getElementById("quest-log");
 const reward = document.getElementById("reward");
-const slime = document.getElementById("slime");
-const says = document.getElementById("slime-says");
+const guide = document.getElementById("guide");
+const says = document.getElementById("guide-says");
+let robot = null; // { react } once the 3D guide has loaded
+
+// Loaded only when the demo scrolls near, so Three.js and the model never slow the first paint.
+new IntersectionObserver(([entry], observer) => {
+  if (!entry.isIntersecting) return;
+  observer.disconnect();
+  import("./assets/avatar3d.js")
+    .then(({ mountAvatar }) => mountAvatar(guide, { className: "warrior" }))
+    .then((api) => { robot = api || null; })
+    .catch((error) => console.warn("3D guide unavailable", error));
+}, { rootMargin: "200px" }).observe(guide);
 const xpLevel = document.getElementById("xp-level");
 const xpText = document.getElementById("xp-text");
 const xpFill = document.getElementById("xp-fill");
@@ -153,7 +164,6 @@ function render() {
   says.textContent = LINES[Math.floor(progress / STEP) * STEP];
   button.textContent = done ? "Play again" : timer ? "Pause" : progress ? "Resume" : "Start session";
   quest.classList.toggle("is-done", done);
-  slime.classList.toggle("is-happy", progress > 0);
   reward.textContent = done ? `+${QUEST_XP} XP and +${QUEST_COINS} coins` : "";
   showXp();
 }
@@ -182,17 +192,6 @@ function burst() {
   }
 }
 
-// Squish and hops run through the Web Animations API, so they layer on top of the slime's idle bob.
-function squish() {
-  slime.animate([{ scale: "1" }, { scale: "1.14 .84" }, { scale: ".94 1.08" }, { scale: "1" }], { duration: 320, easing: "ease-out" });
-}
-
-function hop(height, times) {
-  slime.animate(
-    [{ translate: "0 0", scale: "1" }, { translate: `0 -${height}px`, scale: ".94 1.08", offset: .4 }, { translate: "0 0", scale: "1.1 .9", offset: .75 }, { translate: "0 0", scale: "1" }],
-    { duration: 520, iterations: times, easing: "ease-out" },
-  );
-}
 
 function levelUp(level) {
   // Shown even with reduced motion: it tells the player something happened.
@@ -211,9 +210,9 @@ function tick() {
     timer = null;
   }
   render();
-  if (progress % STEP === 0 && motionOK) {
-    popNumber();
-    squish();
+  if (progress % STEP === 0 && progress < TARGET) {
+    if (motionOK) popNumber();
+    robot?.react("nod");
   }
   if (progress >= TARGET) complete();
 }
@@ -224,10 +223,8 @@ function complete() {
   showXp();
   const leveledUp = levelOf(totalXp) > levelBefore;
   if (leveledUp) levelUp(levelOf(totalXp));
-  if (motionOK) {
-    burst();
-    hop(leveledUp ? 30 : 18, leveledUp ? 3 : 2);
-  }
+  robot?.react(leveledUp ? "dance" : "cheer");
+  if (motionOK) burst();
 }
 
 button.addEventListener("click", () => {
@@ -238,11 +235,5 @@ button.addEventListener("click", () => {
   } else timer = setInterval(tick, TICK_MS);
   render();
 });
-
-// The slime glances at the button when you're about to press it.
-for (const [on, off] of [["pointerenter", "pointerleave"], ["focus", "blur"]]) {
-  button.addEventListener(on, () => slime.classList.add("is-looking"));
-  button.addEventListener(off, () => slime.classList.remove("is-looking"));
-}
 
 render();

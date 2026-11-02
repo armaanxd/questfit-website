@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" />
   <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js", "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } }</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -58,11 +59,9 @@
         </div>
 
         <div class="demo-stage" data-stagger>
-          <div class="slime-wrap" aria-hidden="true">
-            <div class="slime" id="slime">
-              <i class="slime-eye slime-eye--l"></i><i class="slime-eye slime-eye--r"></i><i class="slime-mouth"></i>
-            </div>
-            <p class="slime-says" id="slime-says">Your main quest is waiting.</p>
+          <div class="guide-wrap">
+            <div class="guide" id="guide" aria-hidden="true"></div>
+            <p class="guide-says" id="guide-says">Your main quest is waiting.</p>
           </div>
 
           <article class="quest" id="quest">
