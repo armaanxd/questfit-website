@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 
-// Copied from the app (~/Projects/questfit/avatar3d.js); differences: model path, extra reactions, mountAvatar returns { react }.
+// Copied from the app (~/Projects/questfit/avatar3d.js); differences: model path, extra reactions, mountAvatar returns { react }, follows the cursor.
 const MODEL_URL = "assets/models/assistant.glb";
 const CLIPS = {
   normal: { clip: "Idle", speed: 1, tilt: 0 },
@@ -124,6 +124,25 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
   container.replaceChildren(renderer.domElement);
 
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  // Turn toward the cursor (mouse only). look.x/y run -1..1 from the guide's centre.
+  const head = assistant.getObjectByName("Head");
+  const headBase = new THREE.Quaternion();
+  const turn = new THREE.Quaternion();
+  const look = { x: 0, y: 0 };
+  const aim = { x: 0, y: 0, active: false };
+  const onPointer = (event) => {
+    const box = container.getBoundingClientRect();
+    aim.x = THREE.MathUtils.clamp((event.clientX - box.left - box.width / 2) / (innerWidth / 2), -1, 1);
+    aim.y = THREE.MathUtils.clamp((event.clientY - box.top - box.height / 2) / (innerHeight / 2), -1, 1);
+    aim.active = true;
+  };
+  const onLeave = () => { aim.active = false; };
+  const followCursor = !reduceMotion && matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (followCursor) {
+    addEventListener("pointermove", onPointer, { passive: true });
+    document.documentElement.addEventListener("pointerleave", onLeave);
+  }
+
   const clock = new THREE.Clock();
   let frame = 0;
   let onScreen = true;
@@ -133,9 +152,19 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
     frame = requestAnimationFrame(animate);
     sinceRender += clock.getDelta();
     if (sinceRender < 1 / 30) return;
+    if (head) head.quaternion.copy(headBase); // undo last frame's turn in case the clip doesn't key the head
     mixer.update(sinceRender);
+    const ease = 1 - Math.exp(-6 * sinceRender);
     sinceRender = 0;
-    holder.rotation.y = Math.sin(clock.elapsedTime * 0.65) * 0.18;
+    look.x += ((aim.active ? aim.x : 0) - look.x) * ease;
+    look.y += ((aim.active ? aim.y : 0) - look.y) * ease;
+    const sway = Math.sin(clock.elapsedTime * 0.65) * 0.18 * (1 - Math.min(1, Math.abs(look.x) * 2));
+    holder.rotation.y = sway + look.x * 0.45;
+    if (head) {
+      headBase.copy(head.quaternion);
+      turn.setFromEuler(new THREE.Euler(look.y * 0.35, look.x * 0.4, 0, "YXZ"));
+      head.quaternion.multiply(turn);
+    }
     renderer.render(scene, camera);
   };
   const stop = () => {
@@ -180,6 +209,8 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
     resizeObserver.disconnect();
     visibilityObserver.disconnect();
     document.removeEventListener("visibilitychange", updateRunning);
+    removeEventListener("pointermove", onPointer);
+    document.documentElement.removeEventListener("pointerleave", onLeave);
     mixer.stopAllAction();
     mixer.uncacheRoot(assistant);
     ring.geometry.dispose();
