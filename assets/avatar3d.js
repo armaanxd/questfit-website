@@ -1,15 +1,19 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
+import { VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 
-// Copied from the app (~/Projects/questfit/avatar3d.js); differences: model path, extra reactions, mountAvatar returns { react }, follows the cursor.
-const MODEL_URL = "assets/models/assistant.glb";
-const CLIPS = {
-  normal: { clip: "Idle", speed: 1, tilt: 0 },
-  tired: { clip: "Idle", speed: 0.55, tilt: -0.06 },
-  injured: { clip: "Sitting", speed: 0.7, tilt: -0.12 },
+// Copied from the app (~/Projects/questfit/avatar3d.js); differences: model path, extra reactions (nod, dance), mountAvatar returns { react }, follows the cursor.
+// JD is AvatarSample_C from VRoid Studio (credit required, no mesh edits: see public/models/README.md).
+const MODEL_URL = "assets/models/jd.vrm";
+// Arm angles (rad) around z: the VRM rest pose is a T-pose, so these swing the arms down or up.
+const ARM_DOWN = 1.2;
+const ARM_UP = 2.3;
+const MOODS = {
+  normal: { head: 0, lean: 0, tilt: 0, breath: 1.6, sad: 0 },
+  tired: { head: 0.22, lean: 0.1, tilt: 0, breath: 0.9, sad: 0.3 },
+  injured: { head: 0.28, lean: 0.14, tilt: -0.1, breath: 1.1, sad: 0.6 },
 };
-const REACTIONS = { greet: "Wave", cheer: "ThumbsUp", sad: "No", nod: "Yes", dance: "Dance" };
+const REACTIONS = { greet: 1.8, cheer: 1.6, sad: 1.8, nod: 1.0, dance: 2.4 }; // seconds
 
 const THEMES = {
   warrior: { glow: 0x735cff },
@@ -21,9 +25,14 @@ const THEMES = {
 let modelPromise;
 let greeted = false;
 
-// The dashboard re-renders via innerHTML, so the GLB is fetched and parsed only once.
+// The dashboard re-renders via innerHTML, so the VRM is fetched and parsed only once and each mount gets its own scene.
 function loadModel() {
-  modelPromise ??= new GLTFLoader().loadAsync(MODEL_URL).catch((error) => {
+  modelPromise ??= (async () => {
+    const loader = new GLTFLoader();
+    loader.register((parser) => new VRMLoaderPlugin(parser));
+    const gltf = await loader.loadAsync(MODEL_URL);
+    return gltf.userData.vrm;
+  })().catch((error) => {
     modelPromise = undefined;
     throw error;
   });
@@ -31,7 +40,7 @@ function loadModel() {
 }
 
 function fitToView(model) {
-  model.updateMatrixWorld(true); // a fresh SkeletonUtils clone has stale world matrices
+  model.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(model);
   const size = box.getSize(new THREE.Vector3());
   const scale = 1.9 / Math.max(size.y, 0.001);
@@ -41,11 +50,11 @@ function fitToView(model) {
 }
 
 export async function mountAvatar(container, { className = "warrior", avatarState = "normal", reaction } = {}) {
-  let gltf;
+  let vrm;
   try {
-    gltf = await loadModel();
+    vrm = await loadModel();
   } catch (error) {
-    console.warn("3D assistant unavailable, keeping 2D fallback", error);
+    console.warn("JD unavailable, keeping 2D fallback", error);
     return;
   }
   if (!container.isConnected) return;
@@ -69,7 +78,7 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
   renderer.setSize(width, height, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.domElement.setAttribute("role", "img");
-  renderer.domElement.setAttribute("aria-label", "3D assistant guide");
+  renderer.domElement.setAttribute("aria-label", "JD, your 3D guide");
 
   scene.add(new THREE.HemisphereLight(0xd8f4ff, 0x111b2a, 2.3));
   const key = new THREE.DirectionalLight(0xffe5c5, 3.4);
@@ -87,47 +96,22 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
   ring.rotation.x = Math.PI / 2;
   scene.add(ring);
 
-  const assistant = cloneSkinned(gltf.scene);
-  fitToView(assistant);
-  const pose = CLIPS[avatarState] || CLIPS.normal;
+  const jd = vrm.scene;
+  jd.scale.setScalar(1); // the VRM is shared between mounts, so undo the previous fit
+  jd.position.set(0, 0, 0);
+  fitToView(jd);
+  const mood = MOODS[avatarState] || MOODS.normal;
   const holder = new THREE.Group();
-  holder.rotation.z = pose.tilt;
-  holder.add(assistant);
+  holder.rotation.z = mood.tilt;
+  holder.add(jd);
   scene.add(holder);
 
-  const mixer = new THREE.AnimationMixer(assistant);
-  const findClip = (name) => THREE.AnimationClip.findByName(gltf.animations, name);
-  const loopClip = findClip(pose.clip) || findClip(CLIPS.normal.clip) || gltf.animations[0];
-  const loopAction = loopClip ? mixer.clipAction(loopClip).setEffectiveTimeScale(pose.speed).play() : null;
-  let oneShot = null;
-  // Play a clip once, then crossfade back into the state's loop.
-  const playOnce = (name) => {
-    const clip = findClip(name);
-    if (!clip || !loopAction) return;
-    oneShot?.stop();
-    oneShot = mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce, 1);
-    oneShot.clampWhenFinished = true;
-    oneShot.play();
-    loopAction.fadeOut(0.25);
-    oneShot.fadeIn(0.25);
-  };
-  mixer.addEventListener("finished", ({ action }) => {
-    if (action !== oneShot) return;
-    action.fadeOut(0.4);
-    loopAction.reset().fadeIn(0.4).play();
-  });
-
-  if (REACTIONS[reaction]) playOnce(REACTIONS[reaction]);
-  else if (!greeted && avatarState === "normal") playOnce(REACTIONS.greet);
-  greeted = true;
-
-  container.replaceChildren(renderer.domElement);
-
-  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const bone = (name) => vrm.humanoid.getNormalizedBoneNode(name);
+  const bones = Object.fromEntries(
+    ["hips", "spine", "chest", "head", "leftUpperArm", "rightUpperArm", "leftLowerArm", "rightLowerArm"].map((name) => [name, bone(name)]),
+  );
+  const hipsY = bones.hips.position.y; // the hips carry the model's standing height
   // Turn toward the cursor (mouse only). look.x/y run -1..1 from the guide's centre.
-  const head = assistant.getObjectByName("Head");
-  const headBase = new THREE.Quaternion();
-  const turn = new THREE.Quaternion();
   const look = { x: 0, y: 0 };
   const aim = { x: 0, y: 0, active: false };
   const onPointer = (event) => {
@@ -137,11 +121,46 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
     aim.active = true;
   };
   const onLeave = () => { aim.active = false; };
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const followCursor = !reduceMotion && matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (followCursor) {
     addEventListener("pointermove", onPointer, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
   }
+  let move = null; // { name, t } while a reaction plays
+  const playOnce = (name) => {
+    if (REACTIONS[name]) move = { name, t: 0 };
+  };
+  // Posed from code every frame, so no animation clips ship with the model.
+  const pose = (time) => {
+    const e = move ? Math.sin(Math.PI * Math.min(move.t / REACTIONS[move.name], 1)) : 0;
+    const cheer = move?.name === "cheer" ? e : 0;
+    const greet = move?.name === "greet" ? e : 0;
+    const sad = move?.name === "sad" ? e : 0;
+    const nod = move?.name === "nod" ? Math.sin(time * 10) * 0.2 * e : 0;
+    const dance = move?.name === "dance" ? e : 0;
+    const beat = Math.sin(time * 8);
+    const wave = Math.sin(time * 12) * 0.35 * greet;
+    bones.spine.rotation.set(mood.lean + sad * 0.15, 0, 0);
+    bones.chest.rotation.x = Math.sin(time * mood.breath) * 0.015;
+    bones.head.rotation.set(mood.head + sad * 0.3 - cheer * 0.1 + nod + look.y * 0.35, Math.sin(time * 0.5) * 0.06 + look.x * 0.4, 0);
+    bones.hips.position.y = hipsY + Math.abs(Math.sin(time * 9)) * 0.03 * Math.max(cheer, dance);
+    bones.leftUpperArm.rotation.z = -ARM_DOWN + (ARM_DOWN + ARM_UP) * Math.max(cheer, dance * (0.6 + 0.4 * beat));
+    bones.rightUpperArm.rotation.z = ARM_DOWN - (ARM_DOWN + ARM_UP) * Math.max(cheer, greet, dance * (0.6 - 0.4 * beat));
+    bones.leftLowerArm.rotation.z = 0;
+    bones.rightLowerArm.rotation.z = -wave;
+    const blink = (time % 4) < 0.14 ? 1 : 0;
+    const x = vrm.expressionManager;
+    x.setValue("blink", blink);
+    x.setValue("happy", Math.max(cheer, greet, dance) * 0.8);
+    x.setValue("sad", Math.max(mood.sad, sad));
+  };
+
+  if (REACTIONS[reaction]) playOnce(reaction);
+  else if (!greeted && avatarState === "normal") playOnce("greet");
+  greeted = true;
+
+  container.replaceChildren(renderer.domElement);
 
   const clock = new THREE.Clock();
   let frame = 0;
@@ -152,19 +171,15 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
     frame = requestAnimationFrame(animate);
     sinceRender += clock.getDelta();
     if (sinceRender < 1 / 30) return;
-    if (head) head.quaternion.copy(headBase); // undo last frame's turn in case the clip doesn't key the head
-    mixer.update(sinceRender);
+    if (move && (move.t += sinceRender) > REACTIONS[move.name]) move = null;
     const ease = 1 - Math.exp(-6 * sinceRender);
-    sinceRender = 0;
     look.x += ((aim.active ? aim.x : 0) - look.x) * ease;
     look.y += ((aim.active ? aim.y : 0) - look.y) * ease;
+    pose(clock.elapsedTime);
+    vrm.update(sinceRender);
+    sinceRender = 0;
     const sway = Math.sin(clock.elapsedTime * 0.65) * 0.18 * (1 - Math.min(1, Math.abs(look.x) * 2));
     holder.rotation.y = sway + look.x * 0.45;
-    if (head) {
-      headBase.copy(head.quaternion);
-      turn.setFromEuler(new THREE.Euler(look.y * 0.35, look.x * 0.4, 0, "YXZ"));
-      head.quaternion.multiply(turn);
-    }
     renderer.render(scene, camera);
   };
   const stop = () => {
@@ -199,7 +214,7 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
   });
   visibilityObserver.observe(container);
   document.addEventListener("visibilitychange", updateRunning);
-  if (!reduceMotion) renderer.domElement.addEventListener("pointerdown", () => playOnce(REACTIONS.greet));
+  if (!reduceMotion) renderer.domElement.addEventListener("pointerdown", () => playOnce("greet"));
 
   // A paused loop can't notice the dashboard re-rendering, so check for removal on a slow timer.
   const watcher = setInterval(() => {
@@ -211,15 +226,15 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
     document.removeEventListener("visibilitychange", updateRunning);
     removeEventListener("pointermove", onPointer);
     document.documentElement.removeEventListener("pointerleave", onLeave);
-    mixer.stopAllAction();
-    mixer.uncacheRoot(assistant);
+    holder.remove(jd); // the VRM outlives this mount, so don't dispose it
     ring.geometry.dispose();
     ring.material.dispose();
     renderer.dispose();
   }, 1000);
 
-  mixer.update(0);
+  pose(0);
+  vrm.update(0);
   renderer.render(scene, camera);
   updateRunning();
-  return { react: (reaction) => !reduceMotion && playOnce(REACTIONS[reaction]) };
+  return { react: (reaction) => !reduceMotion && playOnce(reaction) };
 }

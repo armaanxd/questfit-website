@@ -131,10 +131,10 @@ a { color: var(--violet-pale); text-underline-offset: .2em; }
 .demo-stage { display: grid; gap: 1.25rem; }
 
 .guide-wrap { display: flex; align-items: center; gap: 1.25rem; }
-/* The app's 3D robot guide; the glow shows until (or if) the model loads. */
+/* JD, the 3D guide; the glow shows until (or if) the model loads. */
 .guide {
-  flex-shrink: 0; width: 120px; height: 140px;
-  background: radial-gradient(circle at 50% 70%, rgba(115, 92, 255, .28), transparent 65%);
+  flex-shrink: 0; width: 170px; height: 250px;
+  background: radial-gradient(closest-side at 50% 72%, rgba(115, 92, 255, .3), transparent);
 }
 .guide canvas { display: block; width: 100%; height: 100%; }
 .guide-says {
@@ -453,3 +453,7 @@ a { color: var(--violet-pale); text-underline-offset: .2em; }
 section[id] { scroll-margin-top: 72px; }
 h2.is-arrived { animation: arrive 1.3s ease-out; }
 @keyframes arrive { 30% { color: var(--violet-pale); text-shadow: 0 0 30px rgba(184, 160, 255, .8); } }
+
+/* JD in the hero: a still render, so the page runs one WebGL scene (the demo's) and no second copy of the model. */
+.hero > .hero-jd { position: absolute; z-index: 2; right: 335px; bottom: 15rem; width: 220px; height: auto; pointer-events: none; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .5)); }
+@media (max-width: 900px) { .hero > .hero-jd { position: relative; right: auto; bottom: auto; justify-self: center; width: min(55%, 220px); margin-top: calc(-1 * var(--space-m)); } }

@@ -126,7 +126,7 @@ const QUEST_XP = 100;
 const QUEST_COINS = 20;
 const XP_PER_LEVEL = 250;
 const LINES = {
-  0: "Your main quest is waiting.",
+  0: "I'm JD. Your main quest is waiting.",
   10: "That's a start. Keep going.",
   20: "Two-thirds there. One more push.",
   30: "Gate broken. See you tomorrow.",
