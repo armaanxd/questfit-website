@@ -1,3 +1,5 @@
+import { jdLine, jdTier } from "./assets/jdvoice.js";
+
 // Paste the Play Store listing URL here once the app is published.
 // Empty: every download button shows "Coming soon to Google Play".
 const PLAY_STORE_URL = "";
@@ -125,12 +127,7 @@ const TICK_MS = 100; // one demo minute
 const QUEST_XP = 100;
 const QUEST_COINS = 20;
 const XP_PER_LEVEL = 250;
-const LINES = {
-  0: "I'm JD. Your main quest is waiting.",
-  10: "That's a start. Keep going.",
-  20: "Two-thirds there. One more push.",
-  30: "Gate broken. See you tomorrow.",
-};
+const LINE_KINDS = { 0: "waiting", 10: "partial", 20: "nearly", 30: "done" }; // by minutes into the quest
 
 const quest = document.getElementById("quest");
 const bar = document.getElementById("quest-bar");
@@ -146,13 +143,14 @@ new IntersectionObserver(([entry], observer) => {
   if (!entry.isIntersecting) return;
   observer.disconnect();
   import("./assets/avatar3d.js")
-    .then(({ mountAvatar }) => mountAvatar(guide, { className: "warrior" }))
+    .then(({ mountAvatar }) => mountAvatar(guide, { className: "warrior", level: levelOf(totalXp) }))
     .then((api) => { robot = api || null; })
     .catch((error) => console.warn("3D guide unavailable", error));
 }, { rootMargin: "200px" }).observe(guide);
 const xpLevel = document.getElementById("xp-level");
 const xpText = document.getElementById("xp-text");
 const xpFill = document.getElementById("xp-fill");
+const jdLabel = document.getElementById("jd-label");
 let progress = 0;
 let totalXp = 120;
 let timer = null;
@@ -164,6 +162,7 @@ function showXp() {
   xpLevel.textContent = `Level ${levelOf(totalXp)}`;
   xpText.textContent = `${intoLevel} / ${XP_PER_LEVEL} XP`;
   xpFill.style.width = `${(intoLevel / XP_PER_LEVEL) * 100}%`;
+  jdLabel.textContent = jdTier(levelOf(totalXp)).label;
 }
 
 function render() {
@@ -171,7 +170,7 @@ function render() {
   bar.firstElementChild.style.width = `${(progress / TARGET) * 100}%`;
   bar.setAttribute("aria-valuenow", progress);
   count.textContent = done ? "Quest complete" : `${progress} / ${TARGET} min`;
-  says.textContent = LINES[Math.floor(progress / STEP) * STEP];
+  says.textContent = jdLine(levelOf(totalXp), LINE_KINDS[Math.floor(progress / STEP) * STEP]);
   button.textContent = done ? "Play again" : timer ? "Pause" : progress ? "Resume" : "Start session";
   quest.classList.toggle("is-done", done);
   reward.textContent = done ? `+${QUEST_XP} XP and +${QUEST_COINS} coins` : "";
@@ -210,7 +209,7 @@ function levelUp(level) {
   banner.textContent = `Level ${level}`;
   quest.append(banner);
   setTimeout(() => banner.remove(), 1800);
-  says.textContent = `Level ${level}! You're getting stronger.`;
+  says.textContent = jdLine(level, "levelup");
 }
 
 function tick() {
@@ -222,7 +221,7 @@ function tick() {
   render();
   if (progress % STEP === 0 && progress < TARGET) {
     if (motionOK) popNumber();
-    robot?.react("nod");
+    if (jdTier(levelOf(totalXp)).tier >= 2) robot?.react("nod"); // the cold JD doesn't nod along
   }
   if (progress >= TARGET) complete();
 }
@@ -233,7 +232,7 @@ function complete() {
   showXp();
   const leveledUp = levelOf(totalXp) > levelBefore;
   if (leveledUp) levelUp(levelOf(totalXp));
-  robot?.react(leveledUp ? "dance" : "cheer");
+  robot?.react(jdTier(levelOf(totalXp)).move); // JD celebrates as warmly as his level allows
   if (motionOK) burst();
 }
 
@@ -245,5 +244,14 @@ button.addEventListener("click", () => {
   } else timer = setInterval(tick, TICK_MS);
   render();
 });
+
+// Lets visitors meet JD at each attitude without playing through fifteen levels.
+document.querySelectorAll("[data-level]").forEach((chip) => chip.addEventListener("click", () => {
+  totalXp = (Number(chip.dataset.level) - 1) * XP_PER_LEVEL + 120;
+  document.querySelectorAll("[data-level]").forEach((other) => other.setAttribute("aria-pressed", String(other === chip)));
+  showXp();
+  render();
+  robot?.react(jdTier(levelOf(totalXp)).move);
+}));
 
 render();

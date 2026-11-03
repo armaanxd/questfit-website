@@ -2,8 +2,9 @@ import * as THREE from "three";
 
 // Procedural motion for JD (a VRM), driven every frame so no animation clips ship with the model.
 // Layers: breathing, weight shift and head drift always run; a mood changes the base posture; a move
-// (greet, cheer, ...) fades in and out on top. Every bone eases toward its target, so nothing snaps.
-export const MOVES = { greet: 2.4, cheer: 1.9, sad: 2.4, nod: 1.2, dance: 3.2 }; // seconds
+// (greet, thumbsup, ...) fades in and out on top. Every bone eases toward its target, so nothing snaps.
+// scorn, sideeye, thumbsup and fistpump are JD's celebrations, one per attitude tier (see jdvoice.js).
+export const MOVES = { greet: 2.4, sad: 2.4, nod: 1.2, scorn: 2.6, sideeye: 2.6, thumbsup: 2.6, fistpump: 2.2 }; // seconds
 const MOODS = {
   normal: { head: 0, lean: 0, droop: 0, breath: 1.6, sad: 0 },
   tired: { head: 0.2, lean: 0.1, droop: 0.07, breath: 1.0, sad: 0.25 },
@@ -12,8 +13,16 @@ const MOODS = {
 const REST_ARM = 1.36; // rad around z: the VRM rest pose is a T-pose, so this swings an arm down
 const BONES = [
   "hips", "spine", "chest", "neck", "head", "leftShoulder", "rightShoulder",
-  "leftUpperArm", "rightUpperArm", "leftLowerArm", "rightLowerArm", "leftUpperLeg", "rightUpperLeg",
+  "leftUpperArm", "rightUpperArm", "leftLowerArm", "rightLowerArm", "leftHand", "rightHand", "leftUpperLeg", "rightUpperLeg",
 ];
+// Fingers curl about z: toward the palm is +z on the right hand and -z on the left.
+const FINGERS = ["left", "right"].flatMap((side) =>
+  ["Index", "Middle", "Ring", "Little"].flatMap((finger) =>
+    ["Proximal", "Intermediate", "Distal"].map((joint, i) => ({ name: `${side}${finger}${joint}`, side, finger, joint: i })),
+  ),
+);
+const CURL = [1.3, 1.5, 0.9]; // a closed fist, per joint
+const SOFT = [0.25, 0.3, 0.15]; // relaxed fingers
 
 const smooth = (a, b, x) => {
   const t = THREE.MathUtils.clamp((x - a) / (b - a), 0, 1);
@@ -25,7 +34,7 @@ export function createPoser(vrm, moodName = "normal") {
   const mood = MOODS[moodName] || MOODS.normal;
   const bones = {};
   const cur = {};
-  for (const name of BONES) {
+  for (const name of [...BONES, ...FINGERS.map((f) => f.name)]) {
     bones[name] = vrm.humanoid.getNormalizedBoneNode(name);
     cur[name] = [0, 0, 0];
   }
@@ -35,6 +44,7 @@ export function createPoser(vrm, moodName = "normal") {
   let move = null;
   let time = Math.random() * 10; // two mounts shouldn't breathe in step
   let happy = 0;
+  let relaxed = 0;
 
   const play = (name) => {
     if (MOVES[name]) move = { name, t: 0 };
@@ -49,17 +59,19 @@ export function createPoser(vrm, moodName = "normal") {
     const e = move ? smooth(0, 0.2, p) * (1 - smooth(0.78, 1, p)) : 0;
     const on = (name) => (move?.name === name ? e : 0);
     const greet = on("greet");
-    const cheer = on("cheer");
     const sad = on("sad");
     const nod = on("nod");
-    const dance = on("dance");
+    const scorn = on("scorn");
+    const sideeye = on("sideeye");
+    const thumbsup = on("thumbsup");
+    const fistpump = on("fistpump");
+    const fist = Math.max(thumbsup, fistpump);
     const t = time;
     const breath = Math.sin(t * mood.breath);
     const sway = Math.sin(t * 0.55);
-    const beat = Math.sin(t * 7);
-    const bounce = Math.abs(Math.sin(t * 7));
+    const bounce = Math.abs(Math.sin(t * 8));
 
-    const T = Object.fromEntries(BONES.map((name) => [name, [0, 0, 0]]));
+    const T = Object.fromEntries([...BONES, ...FINGERS.map((f) => f.name)].map((name) => [name, [0, 0, 0]]));
     const add = (name, x = 0, y = 0, z = 0) => {
       T[name][0] += x;
       T[name][1] += y;
@@ -67,50 +79,54 @@ export function createPoser(vrm, moodName = "normal") {
     };
 
     // posture and breathing
-    add("spine", mood.lean * 0.5 + sad * 0.18 - cheer * 0.06 + breath * 0.008, dance * Math.sin(t * 3.5) * 0.12, -sway * 0.015 - beat * 0.07 * dance);
-    add("chest", mood.lean * 0.5 + breath * 0.018 + sad * 0.06, dance * Math.sin(t * 3.5) * 0.15 + greet * -0.1, -sway * 0.01);
-    add("hips", 0, -dance * Math.sin(t * 3.5) * 0.1, sway * 0.022 + beat * 0.09 * dance);
+    add("spine", mood.lean * 0.5 + sad * 0.18 + breath * 0.008, 0, -sway * 0.015);
+    add("chest", mood.lean * 0.5 + breath * 0.018 + sad * 0.06 - scorn * 0.06, -greet * 0.1 - sideeye * 0.15, -sway * 0.01);
+    add("hips", 0, 0, sway * 0.022 + scorn * 0.04);
     add("leftShoulder", 0, 0, breath * 0.02 - mood.droop - sad * 0.08);
     add("rightShoulder", 0, 0, -breath * 0.02 + mood.droop + sad * 0.08);
     add("leftUpperLeg", 0, 0, sway * 0.012);
     add("rightUpperLeg", 0, 0, sway * 0.012);
 
-    // head: slow drift, then follow the cursor, then the move
-    const lookX = look.x * 0.45;
-    const lookY = look.y * 0.3;
-    const headX = mood.head + Math.sin(t * 0.8) * 0.025 + Math.sin(t * 1.9) * 0.01 + sad * 0.42 - cheer * 0.18 + lookY + Math.sin(t * 9) * 0.22 * nod;
-    const headY = Math.sin(t * 0.45) * 0.07 + lookX;
-    const headZ = sway * 0.012 + greet * 0.07 + beat * 0.1 * dance;
+    // head: slow drift, then follow the cursor, then the move. Side-eye turns the head away and the eyes keep tracking the camera.
+    const headX = mood.head + Math.sin(t * 0.8) * 0.025 + Math.sin(t * 1.9) * 0.01 + sad * 0.42 - scorn * 0.22 + sideeye * 0.04 + look.y * 0.3 + Math.sin(t * 9) * 0.22 * nod;
+    const headY = Math.sin(t * 0.45) * 0.07 + look.x * 0.45 - sideeye * 0.6;
+    const headZ = sway * 0.012 + greet * 0.07 + scorn * 0.07 - sideeye * 0.04;
     add("neck", headX * 0.4, headY * 0.4, headZ * 0.4);
     add("head", headX * 0.6, headY * 0.6, headZ * 0.6);
 
-    // arms: relaxed with a soft elbow bend, blended toward the move's pose (only one move is ever active)
+    // arms: relaxed with a soft elbow bend; the right arm blends toward the move's pose (only one move is ever active)
     const hang = REST_ARM + mood.droop + sad * 0.1 + breath * 0.008;
     const toward = (rest, ...pairs) => pairs.reduce((value, [weight, target]) => value + weight * (target - rest), rest);
-    add("leftUpperArm", 0, mix(-0.08, -0.15, cheer), toward(-hang, [cheer, 1.3 + Math.sin(t * 10) * 0.12], [dance, 1.0 + 0.7 * beat]));
-    add("rightUpperArm", 0, mix(0.08, 0.15, cheer), toward(hang, [cheer, -1.3 + Math.sin(t * 10) * 0.12], [greet, -0.3], [dance, -1.0 + 0.7 * beat]));
-    add("leftLowerArm", 0, -0.3 - Math.sin(t * 0.9) * 0.02 - (cheer + dance) * 0.5, 0);
-    add("rightLowerArm", 0, 0.3 + Math.sin(t * 0.9 + 1) * 0.02 + (cheer + dance) * 0.5 - greet * 0.2, -greet * (1.15 + Math.sin(t * 11) * 0.3));
+    add("leftUpperArm", 0, -0.08, -hang);
+    add("leftLowerArm", 0, -0.3 - Math.sin(t * 0.9) * 0.02, 0);
+    add("rightUpperArm", 0, 0.08 + thumbsup * 0.35, toward(hang, [greet, -0.3], [fistpump, -0.8]));
+    add("rightLowerArm", -thumbsup * 1.3, 0.3 + Math.sin(t * 0.9 + 1) * 0.02 - greet * 0.2 + thumbsup * 1.6 + fistpump * 0.6, -greet * (1.15 + Math.sin(t * 11) * 0.3) - fistpump * (0.9 + Math.sin(t * 9) * 0.3));
+    for (const { name, side, finger, joint } of FINGERS) {
+      const curl = side === "right" ? mix(SOFT[joint], CURL[joint], fist) : SOFT[joint];
+      add(name, 0, 0, (side === "right" ? 1 : -1) * (curl + (finger === "Index" ? 0 : 0.04)));
+    }
 
     const ease = snap ? 1 : 1 - Math.exp(-12 * dt);
-    for (const name of BONES) {
+    for (const name in T) {
       const bone = bones[name];
       if (!bone) continue;
       for (let i = 0; i < 3; i++) cur[name][i] += (T[name][i] - cur[name][i]) * ease;
       bone.rotation.set(cur[name][0], cur[name][1], cur[name][2]);
     }
-    const hipsTarget = [sway * 0.012, (bounce * 0.035 * cheer) + (bounce * 0.03 * dance) - sad * 0.015];
+    const hipsTarget = [sway * 0.012, bounce * 0.03 * fistpump - sad * 0.015];
     curHips[0] += (hipsTarget[0] - curHips[0]) * ease;
     curHips[1] += (hipsTarget[1] - curHips[1]) * ease;
     bones.hips.position.set(hipsBase.x + curHips[0], hipsBase.y + curHips[1], hipsBase.z);
 
-    // face: a soft blink every few seconds, plus the move's mood
+    // face: a soft blink every few seconds; scorn and side-eye half-close the lids
     const phase = (t % 3.7) / 0.18;
     const blink = phase < 1 ? 1 - Math.abs(phase * 2 - 1) : 0;
-    happy += ((Math.max(greet, cheer, dance) * 0.8 + nod * 0.3) - happy) * ease;
+    happy += ((greet * 0.8 + nod * 0.3 + thumbsup * 0.6 + fistpump) - happy) * ease;
+    relaxed += ((sideeye * 0.5 + scorn * 0.3) - relaxed) * ease;
     if (expr) {
-      expr.setValue("blink", blink);
+      expr.setValue("blink", Math.max(blink, scorn * 0.5 + sideeye * 0.25));
       expr.setValue("happy", happy);
+      expr.setValue("relaxed", relaxed);
       expr.setValue("sad", Math.max(mood.sad, sad * 0.8));
     }
   };

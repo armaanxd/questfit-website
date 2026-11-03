@@ -2,8 +2,9 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { VRMLoaderPlugin } from "@pixiv/three-vrm";
 import { createPoser } from "./jdpose.js";
+import { jdTier } from "./jdvoice.js";
 
-// Copied from the app (~/Projects/questfit/avatar3d.js and jdpose.js); differences: model path, mountAvatar returns { react }, follows the cursor.
+// Copied from the app (~/Projects/questfit/avatar3d.js, jdpose.js, jdvoice.js); differences: model path, mountAvatar returns { react }, follows the cursor.
 // JD is AvatarSample_C from VRoid Studio (credit required, no mesh edits: see public/models/README.md).
 const MODEL_URL = "assets/models/jd.vrm";
 const THEMES = {
@@ -40,7 +41,7 @@ function fitToView(model) {
   model.position.set(-center.x, -box.min.y * scale - 0.55, -center.z);
 }
 
-export async function mountAvatar(container, { className = "warrior", avatarState = "normal", reaction } = {}) {
+export async function mountAvatar(container, { className = "warrior", avatarState = "normal", reaction, level = 1 } = {}) {
   let vrm;
   try {
     vrm = await loadModel();
@@ -114,7 +115,8 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
   const poser = createPoser(vrm, avatarState);
   vrm.lookAt && (vrm.lookAt.target = camera); // eyes meet the viewer
   const playOnce = (name) => poser.play(name);
-  if (!playOnce(reaction) && !greeted && avatarState === "normal") playOnce("greet");
+  const greeting = jdTier(level).greet; // cold at first, a wave once he has warmed up
+  if (!playOnce(reaction) && !greeted && avatarState === "normal") playOnce(greeting);
   greeted = true;
 
   container.replaceChildren(renderer.domElement);
@@ -168,7 +170,7 @@ export async function mountAvatar(container, { className = "warrior", avatarStat
   });
   visibilityObserver.observe(container);
   document.addEventListener("visibilitychange", updateRunning);
-  if (!reduceMotion) renderer.domElement.addEventListener("pointerdown", () => playOnce("greet"));
+  if (!reduceMotion) renderer.domElement.addEventListener("pointerdown", () => playOnce(greeting));
 
   // A paused loop can't notice the dashboard re-rendering, so check for removal on a slow timer.
   const watcher = setInterval(() => {

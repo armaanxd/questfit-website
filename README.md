@@ -9,7 +9,7 @@ The marketing site for the QuestFit app. Plain HTML, CSS and JavaScript: no buil
 | `styles.css` | All styles; palette and fonts match the app |
 | `main.js` | Google Play button and the playable quest demo |
 | `assets/` | App screenshots, favicon, and `jd-hero.png` (a transparent still render of JD for the hero; retake it if the model changes) |
-| `assets/avatar3d.js`, `assets/jdpose.js`, `assets/models/jd.vrm` | JD, the app's 3D guide, used in the demo. Copied from `~/Projects/questfit` (keep in step; the website's model path is `./assets/models/jd.vrm`). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification (see the app's `public/models/README.md`). Three.js and `@pixiv/three-vrm` load from jsDelivr. |
+| `assets/avatar3d.js`, `assets/jdpose.js`, `assets/jdvoice.js`, `assets/models/jd.vrm` | JD, the app's 3D guide, used in the demo. Copied from `~/Projects/questfit` (keep in step; the website's model path is `./assets/models/jd.vrm`). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification (see the app's `public/models/README.md`). Three.js and `@pixiv/three-vrm` load from jsDelivr. |
 | `tools/capture-screens.mjs` | Retakes the app screenshots |
 
 ## View it locally

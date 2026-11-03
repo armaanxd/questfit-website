@@ -457,3 +457,8 @@ h2.is-arrived { animation: arrive 1.3s ease-out; }
 /* JD in the hero: a still render, so the page runs one WebGL scene (the demo's) and no second copy of the model. */
 .hero > .hero-jd { position: absolute; z-index: 2; right: 335px; bottom: 15rem; width: 220px; height: auto; pointer-events: none; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .5)); }
 @media (max-width: 900px) { .hero > .hero-jd { position: relative; right: auto; bottom: auto; justify-self: center; width: min(55%, 220px); margin-top: calc(-1 * var(--space-m)); } }
+
+.jd-mood { margin-top: .75rem; color: var(--muted); font-size: .85rem; }
+.jd-mood strong { color: var(--violet-pale); }
+.jd-mood button { min-width: 2.2rem; margin-left: .25rem; padding: .2rem .5rem; border: 1px solid var(--line); border-radius: 99px; background: transparent; color: var(--muted); font: inherit; cursor: pointer; }
+.jd-mood button[aria-pressed="true"] { border-color: var(--violet); color: var(--text); }
