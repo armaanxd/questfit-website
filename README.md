@@ -1,6 +1,6 @@
 # QuestFit website
 
-The marketing site for the QuestFit app. Plain HTML, CSS and JavaScript: no build step. The only outside script is Three.js from a CDN, loaded when the demo scrolls into view.
+The marketing site for the QuestFit app. Plain HTML, CSS and JavaScript: no build step. Outside scripts, all from jsDelivr: Three.js and `@pixiv/three-vrm` (JD, loaded after first paint) and Lenis (smooth scrolling).
 
 | File | What it is |
 |---|---|
@@ -9,7 +9,7 @@ The marketing site for the QuestFit app. Plain HTML, CSS and JavaScript: no buil
 | `styles.css` | All styles; palette and fonts match the app |
 | `main.js` | Google Play button and the playable quest demo |
 | `assets/` | App screenshots, favicon, and `jd-hero.webp` and `jd-aloof/grudging/warm/proud.webp` (transparent still renders of JD for the hero and the attitude cards; retake them if the model or poses change) |
-| `assets/avatar3d.js`, `assets/jdpose.js`, `assets/jdvoice.js`, `assets/models/jd.vrm` | JD, the app's 3D guide, used in the demo. Copied from `~/Projects/questfit` (keep in step; the website's model path is `./assets/models/jd.vrm`). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification (see the app's `public/models/README.md`). Three.js and `@pixiv/three-vrm` load from jsDelivr. |
+| `assets/jdstage.js`, `assets/jdpose.js`, `assets/jdvoice.js`, `assets/models/jd.vrm` | JD, one 3D character for the whole page. `jdstage.js` moves a small fixed canvas to whichever `[data-jd-anchor]` element is on screen and docks it in the corner otherwise; `data-jd-move` on a section plays a move as it arrives. `jdpose.js` and `jdvoice.js` are copied from `~/Projects/questfit` (keep in step). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification. Visitors who prefer reduced motion or save data keep the still images. |
 | `tools/capture-screens.mjs` | Retakes the app screenshots |
 
 ## View it locally

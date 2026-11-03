@@ -23,6 +23,20 @@ if (motionOK) document.documentElement.classList.add("motion");
 
 const rand = (min, max) => min + Math.random() * (max - min);
 
+// ---------- Smooth scrolling (Lenis) ----------
+if (motionOK && window.Lenis) {
+  const lenis = new Lenis();
+  document.documentElement.classList.add("lenis", "lenis-smooth");
+  const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
+  document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListener("click", (event) => {
+    const target = document.querySelector(link.getAttribute("href"));
+    if (!target) return;
+    event.preventDefault();
+    lenis.scrollTo(target, { offset: -72 });
+  }));
+}
+
 // ---------- Hero: drifting runes and cursor glow ----------
 const hero = document.querySelector(".hero");
 const runes = document.querySelector(".runes");
@@ -47,7 +61,7 @@ if (motionOK && finePointer) {
 
 // ---------- Scroll reveals ----------
 if (motionOK) {
-  document.querySelectorAll("main section:not(.hero) h2, .demo-copy p, .stakes-lede, .soon-lede, .stakes-safe, .cta .play-slot")
+  document.querySelectorAll(".demo-copy p, .stakes-lede, .soon-lede, .stakes-safe, .cta .play-slot")
     .forEach((el) => el.classList.add("reveal"));
   document.querySelectorAll("[data-stagger]").forEach((group) => {
     [...group.children].forEach((child, index) => child.style.setProperty("--i", index));
@@ -57,25 +71,44 @@ if (motionOK) {
     entry.target.classList.add("is-visible");
     observer.unobserve(entry.target);
   }), { threshold: .2, rootMargin: "0px 0px -8% 0px" });
-  document.querySelectorAll(".reveal, [data-stagger], .screen-strip").forEach((el) => observer.observe(el));
+  document.querySelectorAll("main section:not(.hero) h2").forEach((heading) => {
+    heading.classList.add("words");
+    heading.innerHTML = heading.textContent.trim().split(/\s+/).map((word, i) => `<span class="w"><span style="--wi:${i}">${word}</span></span>`).join(" ");
+  });
+  document.querySelectorAll(".reveal, .words, [data-stagger]").forEach((el) => observer.observe(el));
 }
 
-// ---------- Screenshot phones tilt toward the cursor ----------
+// ---------- Cards glow and tilt toward the cursor ----------
 if (motionOK && finePointer) {
-  document.querySelectorAll(".screen-strip .phone").forEach((phone) => {
-    phone.addEventListener("pointermove", (event) => {
-      const box = phone.getBoundingClientRect();
-      const x = (event.clientX - box.left) / box.width - .5;
-      const y = (event.clientY - box.top) / box.height - .5;
-      phone.classList.add("is-tilting");
-      phone.style.transform = `perspective(900px) rotateX(${-y * 10}deg) rotateY(${x * 14}deg) scale(1.02)`;
+  document.querySelectorAll(".jd-tier, .mode, .soon-list li, .quest").forEach((card) => {
+    card.classList.add("glow-card");
+    card.addEventListener("pointermove", (event) => {
+      const box = card.getBoundingClientRect();
+      const x = (event.clientX - box.left) / box.width;
+      const y = (event.clientY - box.top) / box.height;
+      card.style.setProperty("--mx", `${x * 100}%`);
+      card.style.setProperty("--my", `${y * 100}%`);
+      card.style.setProperty("--rx", `${(.5 - y) * 6}deg`);
+      card.style.setProperty("--ry", `${(x - .5) * 8}deg`);
+      card.classList.add("is-hot");
     });
-    phone.addEventListener("pointerleave", () => {
-      phone.classList.remove("is-tilting");
-      phone.style.transform = "";
+    card.addEventListener("pointerleave", () => {
+      card.classList.remove("is-hot");
+      ["--rx", "--ry"].forEach((name) => card.style.setProperty(name, "0deg"));
     });
   });
 }
+
+// ---------- Inside the app: the pinned phone shows the step that is in the middle of the screen ----------
+const shots = document.querySelectorAll(".tour-phone img");
+const steps = document.querySelectorAll(".tour-step");
+steps[0]?.classList.add("is-active");
+const stepObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+  if (!entry.isIntersecting) return;
+  steps.forEach((step) => step.classList.toggle("is-active", step === entry.target));
+  shots.forEach((shot) => shot.classList.toggle("is-active", shot.dataset.shot === entry.target.dataset.shot));
+}), { rootMargin: "-45% 0px -45% 0px" });
+steps.forEach((step) => stepObserver.observe(step));
 
 // ---------- Class icons play their hover animation once on touch screens ----------
 if (motionOK && !matchMedia("(hover: hover)").matches) {
@@ -134,19 +167,19 @@ const bar = document.getElementById("quest-bar");
 const count = document.getElementById("quest-count");
 const button = document.getElementById("quest-log");
 const reward = document.getElementById("reward");
-const guide = document.getElementById("guide");
 const says = document.getElementById("guide-says");
-let robot = null; // { react } once the 3D guide has loaded
+let robot = null; // { react } once JD has loaded
 
-// Loaded only when the demo scrolls near, so Three.js and the model never slow the first paint.
-new IntersectionObserver(([entry], observer) => {
-  if (!entry.isIntersecting) return;
-  observer.disconnect();
-  import("./assets/avatar3d.js")
-    .then(({ mountAvatar }) => mountAvatar(guide, { className: "warrior", level: levelOf(totalXp) }))
-    .then((api) => { robot = api || null; })
-    .catch((error) => console.warn("3D guide unavailable", error));
-}, { rootMargin: "200px" }).observe(guide);
+// JD is one 3D character for the whole page (assets/jdstage.js), loaded after first paint. Visitors who ask for
+// reduced motion or save data keep the still images.
+if (motionOK && !navigator.connection?.saveData) {
+  addEventListener("load", () => setTimeout(() => {
+    import("./assets/jdstage.js")
+      .then(({ mountStage }) => mountStage({ level: levelOf(totalXp) }))
+      .then((api) => { robot = api || null; })
+      .catch((error) => console.warn("3D guide unavailable", error));
+  }, 600), { once: true });
+}
 const xpLevel = document.getElementById("xp-level");
 const xpText = document.getElementById("xp-text");
 const xpFill = document.getElementById("xp-fill");

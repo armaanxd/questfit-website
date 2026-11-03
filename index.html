@@ -49,7 +49,7 @@
       <figure class="phone hero-phone">
         <img src="assets/screen-dashboard.jpg" width="390" height="844" alt="The QuestFit dashboard: a greeting, the day streak, XP and coins, and today's main quest at 67%." />
       </figure>
-      <img class="hero-jd" src="assets/jd-hero.webp" width="300" height="450" alt="JD, the QuestFit guide: a young adventurer in a black and grey tech jacket." />
+      <img class="hero-jd" data-jd-anchor data-jd-yaw="-0.25" src="assets/jd-hero.webp" width="300" height="450" alt="JD, the QuestFit guide: a young adventurer in a black and grey tech jacket." />
     </section>
 
     <section class="demo" aria-labelledby="demo-title">
@@ -61,7 +61,7 @@
 
         <div class="demo-stage" data-stagger>
           <div class="guide-wrap">
-            <div class="guide" id="guide" aria-hidden="true"></div>
+            <div class="guide" id="guide" data-jd-anchor aria-hidden="true"><img src="assets/jd-aloof.webp" alt="" width="360" height="480" /></div>
             <p class="guide-says" id="guide-says">I'm JD. Your main quest is waiting.</p>
           </div>
 
@@ -129,7 +129,7 @@
       <p class="jd-try"><a href="#demo-title">Meet him at each level in the demo above</a></p>
     </section>
 
-    <section class="how wrap" id="how" aria-labelledby="how-title">
+    <section class="how wrap" id="how" data-jd-move="sideeye" aria-labelledby="how-title">
       <h2 id="how-title">How a campaign works</h2>
       <ol class="steps" data-stagger>
         <li>
@@ -147,7 +147,7 @@
       </ol>
     </section>
 
-    <section class="classes" id="classes" aria-labelledby="classes-title">
+    <section class="classes" id="classes" data-jd-move="thumbsup" aria-labelledby="classes-title">
       <div class="wrap">
         <h2 id="classes-title">Four ways to play</h2>
         <ul class="class-list" data-stagger>
@@ -187,7 +187,7 @@
       </div>
     </section>
 
-    <section class="stakes wrap" aria-labelledby="stakes-title">
+    <section class="stakes wrap" data-jd-move="sad" aria-labelledby="stakes-title">
       <h2 id="stakes-title">You choose what a missed day costs.</h2>
       <p class="stakes-lede">Stakes keep you coming back. Skip your main quest, or skip the app for a day, and it counts as missed. You set how high the stakes are, and you can change it anytime.</p>
       <div class="modes" data-stagger>
@@ -207,23 +207,46 @@
       <p class="stakes-safe">Penalties are always virtual: never real money, never public. A shield absorbs your first miss. Two rest days and two sick days a month protect your streak, no questions asked.</p>
     </section>
 
-    <section class="screens" aria-labelledby="screens-title">
+    <section class="tour" id="tour" aria-labelledby="tour-title" data-jd-move="nod">
       <div class="wrap">
-        <h2 id="screens-title">Inside the app</h2>
-      </div>
-      <div class="screen-strip wrap">
-        <figure>
-          <div class="phone"><img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="The quest board: the main quest at 20 of 30 minutes with a Timer badge and a Start session button." /></div>
-          <figcaption>The daily quest board</figcaption>
-        </figure>
-        <figure>
-          <div class="phone"><img src="assets/screen-stats.jpg" width="390" height="844" loading="lazy" alt="A radar chart of eight attributes such as strength, cardio and discipline." /></div>
-          <figcaption>Your stat sheet</figcaption>
-        </figure>
-        <figure>
-          <div class="phone"><img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="The character page showing class, rank and progress to the next rank." /></div>
-          <figcaption>Your character and rank</figcaption>
-        </figure>
+        <h2 id="tour-title">Inside the app</h2>
+        <div class="tour-grid">
+          <ol class="tour-steps">
+          <li class="tour-step" data-shot="0">
+            <span class="tour-num" aria-hidden="true">01</span>
+            <h3>Your day at a glance</h3>
+            <p>Your greeting, streak, XP and coins, and today's main quest, with JD keeping an eye on you.</p>
+            <div class="phone tour-inline"><img src="assets/screen-dashboard.jpg" width="390" height="844" loading="lazy" alt="The QuestFit dashboard: a greeting, the day streak, XP and coins, and today's main quest at 67%." /></div>
+          </li>
+          <li class="tour-step" data-shot="1">
+            <span class="tour-num" aria-hidden="true">02</span>
+            <h3>The daily board</h3>
+            <p>A main quest that protects your streak, two side quests and a class trial. Each one needs proof: a watch workout or the timer.</p>
+            <div class="phone tour-inline"><img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="The quest board: the main quest at 20 of 30 minutes with a Timer badge and a Start session button." /></div>
+          </li>
+          <li class="tour-step" data-shot="2">
+            <span class="tour-num" aria-hidden="true">03</span>
+            <h3>Your stat sheet</h3>
+            <p>Eight attributes, such as strength, cardio and discipline, grow from how you actually train.</p>
+            <div class="phone tour-inline"><img src="assets/screen-stats.jpg" width="390" height="844" loading="lazy" alt="A radar chart of eight attributes such as strength, cardio and discipline." /></div>
+          </li>
+          <li class="tour-step" data-shot="3">
+            <span class="tour-num" aria-hidden="true">04</span>
+            <h3>Your character and rank</h3>
+            <p>Climb from E-Rank to S-Rank and watch your class page fill in as you progress.</p>
+            <div class="phone tour-inline"><img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="The character page showing class, rank and progress to the next rank." /></div>
+          </li>
+          </ol>
+          <div class="tour-phone" aria-hidden="true">
+            <div class="tour-jd" data-jd-anchor data-jd-yaw="0.35"></div>
+            <div class="phone">
+            <img src="assets/screen-dashboard.jpg" width="390" height="844" loading="lazy" alt="" data-shot="0" class="is-active" />
+            <img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="" data-shot="1" />
+            <img src="assets/screen-stats.jpg" width="390" height="844" loading="lazy" alt="" data-shot="2" />
+            <img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="" data-shot="3" />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -270,7 +293,7 @@
       </details>
     </section>
 
-    <section class="cta wrap" aria-labelledby="cta-title">
+    <section class="cta wrap" data-jd-move="fistpump" aria-labelledby="cta-title">
       <h2 id="cta-title">Start your campaign.</h2>
       <div class="play-slot" data-play></div>
     </section>
@@ -284,6 +307,7 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
   <script type="module" src="main.js"></script>
 </body>
 </html>
