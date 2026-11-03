@@ -79,17 +79,17 @@ export function createPoser(vrm, moodName = "normal") {
     };
 
     // posture and breathing
-    add("spine", mood.lean * 0.5 + sad * 0.18 + breath * 0.008, 0, -sway * 0.015);
-    add("chest", mood.lean * 0.5 + breath * 0.018 + sad * 0.06 - scorn * 0.06, -greet * 0.1 - sideeye * 0.15, -sway * 0.01);
-    add("hips", 0, 0, sway * 0.022 + scorn * 0.04);
-    add("leftShoulder", 0, 0, breath * 0.02 - mood.droop - sad * 0.08);
-    add("rightShoulder", 0, 0, -breath * 0.02 + mood.droop + sad * 0.08);
-    add("leftUpperLeg", 0, 0, sway * 0.012);
-    add("rightUpperLeg", 0, 0, sway * 0.012);
+    add("spine", mood.lean * 0.5 + sad * 0.18 + breath * 0.015, Math.sin(t * 0.37) * 0.05, -sway * 0.035);
+    add("chest", mood.lean * 0.5 + breath * 0.035 + sad * 0.06 - scorn * 0.06, Math.sin(t * 0.37) * 0.06 - greet * 0.1 - sideeye * 0.15, -sway * 0.02);
+    add("hips", 0, 0, sway * 0.05 + scorn * 0.04);
+    add("leftShoulder", 0, 0, breath * 0.04 - mood.droop - sad * 0.08);
+    add("rightShoulder", 0, 0, -breath * 0.04 + mood.droop + sad * 0.08);
+    add("leftUpperLeg", 0, 0, sway * 0.03);
+    add("rightUpperLeg", 0, 0, sway * 0.03);
 
     // head: slow drift, then follow the cursor, then the move. Side-eye turns the head away and the eyes keep tracking the camera.
-    const headX = mood.head + Math.sin(t * 0.8) * 0.025 + Math.sin(t * 1.9) * 0.01 + sad * 0.42 - scorn * 0.22 + sideeye * 0.04 + look.y * 0.3 + Math.sin(t * 9) * 0.22 * nod;
-    const headY = Math.sin(t * 0.45) * 0.07 + look.x * 0.45 - sideeye * 0.6;
+    const headX = mood.head + Math.sin(t * 0.8) * 0.05 + Math.sin(t * 1.9) * 0.02 + sad * 0.42 - scorn * 0.22 + sideeye * 0.04 + look.y * 0.3 + Math.sin(t * 9) * 0.22 * nod;
+    const headY = Math.sin(t * 0.45) * 0.16 + Math.sin(t * 1.1) * 0.04 + look.x * 0.45 - sideeye * 0.6;
     const headZ = sway * 0.012 + greet * 0.07 + scorn * 0.07 - sideeye * 0.04;
     add("neck", headX * 0.4, headY * 0.4, headZ * 0.4);
     add("head", headX * 0.6, headY * 0.6, headZ * 0.6);
@@ -113,7 +113,7 @@ export function createPoser(vrm, moodName = "normal") {
       for (let i = 0; i < 3; i++) cur[name][i] += (T[name][i] - cur[name][i]) * ease;
       bone.rotation.set(cur[name][0], cur[name][1], cur[name][2]);
     }
-    const hipsTarget = [sway * 0.012, bounce * 0.03 * fistpump - sad * 0.015];
+    const hipsTarget = [sway * 0.03, bounce * 0.03 * fistpump - sad * 0.015];
     curHips[0] += (hipsTarget[0] - curHips[0]) * ease;
     curHips[1] += (hipsTarget[1] - curHips[1]) * ease;
     bones.hips.position.set(hipsBase.x + curHips[0], hipsBase.y + curHips[1], hipsBase.z);
