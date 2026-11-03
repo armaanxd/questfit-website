@@ -33,6 +33,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
+  position: relative;
   margin: 0;
   background: var(--void);
   color: var(--text);
@@ -484,7 +485,8 @@ h2.is-arrived { animation: arrive 1.3s ease-out; }
 @media (max-width: 900px) { .jd-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* ---------- One JD for the whole page (assets/jdstage.js) ---------- */
-#jd-stage { position: fixed; left: 0; top: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity .5s ease; will-change: transform; }
+#jd-layer { position: absolute; inset: 0; z-index: 6; overflow: hidden; pointer-events: none; }
+#jd-stage { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .5s ease; will-change: transform; }
 .guide img { width: 100%; height: 100%; object-fit: contain; transition: opacity .4s; }
 .hero-jd { transition: opacity .4s; }
 .stage-on .guide img, .stage-on .hero-jd { opacity: 0; }
@@ -499,7 +501,6 @@ h2.is-arrived { animation: arrive 1.3s ease-out; }
 .tour-step h3 { margin-top: .5rem; font-size: var(--step-3); }
 .tour-step p { max-width: 36ch; margin-top: .9rem; color: var(--muted); font-size: var(--step-1); }
 .tour-inline { display: none; }
-.tour-jd { position: absolute; right: calc(100% + 8px); bottom: 0; width: 170px; height: 280px; pointer-events: none; }
 .tour-phone { position: sticky; top: max(84px, calc(50vh - 340px)); }
 .tour-phone img { opacity: 0; transition: opacity .6s ease; }
 .tour-phone img.is-active { opacity: 1; }
@@ -558,8 +559,8 @@ main h2.words { background: none; color: var(--text); }
 @media (max-width: 640px) { .nav { grid-template-columns: 1fr auto; } }
 
 /* ---------- A scene of light behind each section ---------- */
-.demo, .jd, .how, .classes, .stakes, .tour, .soon, .cta { position: relative; isolation: isolate; }
-.demo::before, .jd::before, .how::before, .classes::before, .stakes::before, .tour::before, .soon::before {
+.demo, .jd, .how, .classes, .stakes, .tour, .watch, .soon, .cta { position: relative; isolation: isolate; }
+.demo::before, .jd::before, .how::before, .classes::before, .stakes::before, .tour::before, .watch::before, .soon::before {
   content: ""; position: absolute; z-index: -1; pointer-events: none; inset: 0 calc(50% - 50vw);
   mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
 }
@@ -598,4 +599,23 @@ main h2.words { background: none; color: var(--text); }
   .hero-scene { height: 380px; }
   .hero-jd { width: 227px; height: 340px; margin-left: -114px; }
   .hero-phone { display: none; }
+}
+
+/* ---------- Video: the app in motion ---------- */
+.watch { padding-block: var(--space-l); }
+.watch h2 { text-align: center; }
+.watch::before { background: radial-gradient(40% 55% at 50% 50%, rgba(118, 89, 223, .3), transparent 72%); }
+.watch-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px) minmax(0, 1fr); gap: var(--space-m); align-items: center; margin-top: var(--space-m); }
+.watch-steps { grid-column: 1; margin: 0; padding: 0; list-style: none; justify-self: end; max-width: 30ch; }
+.watch-steps li { padding: .9rem 0 .9rem 1rem; border-left: 2px solid var(--line); opacity: .4; transition: opacity .4s, border-color .4s; }
+.watch-steps li.is-active { opacity: 1; border-color: var(--violet); }
+.watch-steps strong { display: block; font: 700 var(--step-1)/1.2 var(--font-display); }
+.watch-steps span { display: block; margin-top: .25rem; color: var(--muted); font-size: .9rem; }
+.watch-phone { grid-column: 2; width: 100%; }
+.watch-phone video { display: block; width: 100%; aspect-ratio: 780 / 1665; border-radius: 34px; background: #0c0e1d; object-fit: cover; }
+.watch-toggle { position: absolute; right: 22px; bottom: 22px; width: 44px; height: 44px; border: 1px solid rgba(184, 160, 255, .4); border-radius: 50%; background: rgba(16, 19, 35, .8); backdrop-filter: blur(8px); color: var(--text); font-size: 1rem; cursor: pointer; }
+@media (max-width: 900px) {
+  .watch-grid { grid-template-columns: 1fr; }
+  .watch-phone { grid-column: 1; width: min(78%, 300px); justify-self: center; order: -1; }
+  .watch-steps { grid-column: 1; justify-self: center; }
 }

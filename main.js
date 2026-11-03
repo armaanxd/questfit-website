@@ -142,6 +142,33 @@ document.querySelectorAll(".faq details").forEach((details) => {
   });
 });
 
+// ---------- Video: plays while it is on screen, with a pause button; the steps beside it follow the clock ----------
+const tour = document.getElementById("tour-video");
+if (tour) {
+  const toggle = document.querySelector(".watch-toggle");
+  const watchSteps = [...document.querySelectorAll(".watch-steps li")];
+  const setPlaying = (playing) => {
+    toggle.textContent = playing ? "❚❚" : "▶";
+    toggle.setAttribute("aria-label", playing ? "Pause the video" : "Play the video");
+  };
+  let userPaused = !motionOK; // visitors who asked for reduced motion press play themselves
+  tour.addEventListener("play", () => setPlaying(true));
+  tour.addEventListener("pause", () => setPlaying(false));
+  toggle.addEventListener("click", () => {
+    userPaused = !tour.paused;
+    if (tour.paused) tour.play(); else tour.pause();
+  });
+  tour.addEventListener("timeupdate", () => {
+    const active = watchSteps.findLastIndex((step) => tour.currentTime >= Number(step.dataset.at));
+    watchSteps.forEach((step, i) => step.classList.toggle("is-active", i === active));
+  });
+  watchSteps[0].classList.add("is-active");
+  new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && !userPaused) tour.play().catch(() => {});
+    else if (!entry.isIntersecting) tour.pause();
+  }, { threshold: 0.5 }).observe(tour);
+}
+
 // ---------- Menu links: the section heading glows once you arrive ----------
 document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListener("click", () => {
   const heading = document.querySelector(link.getAttribute("href"))?.querySelector("h2");

@@ -50,7 +50,7 @@
         <figure class="phone hero-phone">
           <img src="assets/screen-dashboard.jpg" width="390" height="844" alt="The QuestFit dashboard: a greeting, the day streak, XP and coins, and today's main quest at 67%." />
         </figure>
-        <img class="hero-jd" data-jd-anchor data-jd-yaw="-0.25" src="assets/jd-hero.webp" width="267" height="400" alt="JD, the QuestFit guide: a young adventurer in a black and grey tech jacket." />
+        <img class="hero-jd" src="assets/jd-hero.webp" width="267" height="400" alt="JD, the QuestFit guide: a young adventurer in a black and grey tech jacket." />
         <p class="chip chip--quest" aria-hidden="true">⚔ Break the Iron Gate <strong>20 / 30 min</strong></p>
         <p class="chip chip--tier" aria-hidden="true">JD is <strong>Grudging</strong> · Level 7</p>
       </div>
@@ -66,7 +66,7 @@
 
         <div class="demo-stage" data-stagger>
           <div class="guide-wrap">
-            <div class="guide" id="guide" data-jd-anchor aria-hidden="true"><img src="assets/jd-aloof.webp" alt="" width="360" height="480" /></div>
+            <div class="guide" id="guide" aria-hidden="true"><img src="assets/jd-aloof.webp" alt="" width="360" height="480" /></div>
             <p class="guide-says" id="guide-says">I'm JD. Your main quest is waiting.</p>
           </div>
 
@@ -248,7 +248,6 @@
           </li>
           </ol>
           <div class="tour-phone" aria-hidden="true">
-            <div class="tour-jd" data-jd-anchor data-jd-yaw="0.35"></div>
             <div class="phone">
             <img src="assets/screen-dashboard.jpg" width="390" height="844" loading="lazy" alt="" data-shot="0" class="is-active" />
             <img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="" data-shot="1" />
@@ -256,6 +255,26 @@
             <img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="" data-shot="3" />
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="watch" id="watch" aria-labelledby="watch-title">
+      <div class="wrap">
+        <p class="pill">See it in motion</p>
+        <h2 id="watch-title">A day in QuestFit, in thirty seconds.</h2>
+        <div class="watch-grid">
+          <ol class="watch-steps" aria-label="What the video shows">
+          <li data-at="0"><strong>Create your campaign</strong><span>Pick a name and a class. Your campaign lives on your phone.</span></li>
+          <li data-at="3"><strong>Your day at a glance</strong><span>Streak, XP, coins and today's main quest, with JD keeping an eye on you.</span></li>
+          <li data-at="10"><strong>Clear the daily board</strong><span>Start the timer, finish the main quest, log your sets and steps.</span></li>
+          <li data-at="21.5"><strong>Watch your stats grow</strong><span>Eight attributes fill in from how you actually train.</span></li>
+          <li data-at="24"><strong>Check your character</strong><span>Rank, class trial and progress, all in one place.</span></li>
+          </ol>
+          <figure class="phone watch-phone">
+            <video id="tour-video" src="assets/app-tour.webm" poster="assets/screen-dashboard.jpg" muted playsinline loop preload="none" aria-label="A walk through QuestFit: creating a campaign, the dashboard, the quest board with a running timer, the stat sheet and the character page."></video>
+            <button class="watch-toggle" type="button" aria-label="Play the video" aria-pressed="false">▶</button>
+          </figure>
         </div>
       </div>
     </section>
@@ -309,7 +328,7 @@
       <p class="pill">Coming soon</p>
       <h2 id="cta-title">Start your campaign.</h2>
       <div class="play-slot" data-play></div>
-      <div class="cta-jd" data-jd-anchor><img src="assets/jd-proud.webp" alt="" width="360" height="480" loading="lazy" /></div>
+      <div class="cta-jd"><img src="assets/jd-proud.webp" alt="" width="360" height="480" loading="lazy" /></div>
     </section>
   </main>
 

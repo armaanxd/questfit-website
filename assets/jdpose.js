@@ -13,7 +13,7 @@ const MOODS = {
 const REST_ARM = 1.36; // rad around z: the VRM rest pose is a T-pose, so this swings an arm down
 const BONES = [
   "hips", "spine", "chest", "neck", "head", "leftShoulder", "rightShoulder",
-  "leftUpperArm", "rightUpperArm", "leftLowerArm", "rightLowerArm", "leftHand", "rightHand", "leftUpperLeg", "rightUpperLeg",
+  "leftUpperArm", "rightUpperArm", "leftLowerArm", "rightLowerArm", "leftHand", "rightHand", "leftUpperLeg", "rightUpperLeg", "leftLowerLeg", "rightLowerLeg",
 ];
 // Fingers curl about z: toward the palm is +z on the right hand and -z on the left.
 const FINGERS = ["left", "right"].flatMap((side) =>
@@ -29,6 +29,8 @@ const smooth = (a, b, x) => {
   return t * t * (3 - 2 * t);
 };
 const mix = (a, b, w) => a + (b - a) * w;
+// loco is how the page moves JD: mode idle | walk | jump, speed in body heights per second, u the jump's progress 0..1.
+const IDLE = { mode: "idle", speed: 0, u: 0 };
 
 export function createPoser(vrm, moodName = "normal") {
   const mood = MOODS[moodName] || MOODS.normal;
@@ -45,6 +47,9 @@ export function createPoser(vrm, moodName = "normal") {
   let time = Math.random() * 10; // two mounts shouldn't breathe in step
   let happy = 0;
   let relaxed = 0;
+  let walkW = 0; // how much of the walk and jump layers is blended in
+  let jumpW = 0;
+  let stride = 0; // radians through the walk cycle
 
   const play = (name) => {
     if (MOVES[name]) move = { name, t: 0 };
@@ -52,12 +57,17 @@ export function createPoser(vrm, moodName = "normal") {
   };
 
   // look.x / look.y run -1..1 (where the cursor is); snap jumps straight to the target pose.
-  const update = (dt, look = { x: 0, y: 0 }, snap = false) => {
+  const update = (dt, look = { x: 0, y: 0 }, snap = false, loco = IDLE) => {
     time += dt;
+    const blend = snap ? 1 : 1 - Math.exp(-10 * dt);
+    walkW += ((loco.mode === "walk" ? 1 : 0) - walkW) * blend;
+    jumpW += ((loco.mode === "jump" ? 1 : 0) - jumpW) * blend;
+    const still = 1 - Math.max(walkW, jumpW); // moves like a wave only play while he is standing
+    stride += dt * 2 * Math.PI * (loco.speed / 0.8); // one cycle covers about 0.8 body heights
     if (move && (move.t += dt) > MOVES[move.name]) move = null;
     const p = move ? move.t / MOVES[move.name] : 0;
     const e = move ? smooth(0, 0.2, p) * (1 - smooth(0.78, 1, p)) : 0;
-    const on = (name) => (move?.name === name ? e : 0);
+    const on = (name) => (move?.name === name ? e * still : 0);
     const greet = on("greet");
     const sad = on("sad");
     const nod = on("nod");
@@ -106,7 +116,42 @@ export function createPoser(vrm, moodName = "normal") {
       add(name, 0, 0, (side === "right" ? 1 : -1) * (curl + (finger === "Index" ? 0 : 0.04)));
     }
 
-    const ease = snap ? 1 : 1 - Math.exp(-12 * dt);
+    // walking and running: legs, knees, opposite arm swing, a lean and a bob
+    if (walkW > 0.01) {
+      const amp = THREE.MathUtils.clamp(loco.speed * 0.5, 0.25, 0.85) * walkW;
+      const run = smooth(1, 2.4, loco.speed) * walkW;
+      const s = Math.sin(stride);
+      const c = Math.cos(stride);
+      add("leftUpperLeg", -amp * s);
+      add("rightUpperLeg", amp * s);
+      add("leftLowerLeg", 1.3 * amp * Math.max(0, c));
+      add("rightLowerLeg", 1.3 * amp * Math.max(0, -c));
+      add("leftUpperArm", 0.7 * amp * s);
+      add("rightUpperArm", -0.7 * amp * s);
+      add("leftLowerArm", 0, -0.5 * run);
+      add("rightLowerArm", 0, 0.5 * run);
+      add("spine", 0.05 + 0.2 * run, s * 0.1 * amp);
+      add("chest", 0, -s * 0.14 * amp);
+      add("head", -0.05 - 0.1 * run);
+    }
+    // jumping: crouch, spring, tuck in the air, absorb the landing
+    let hipsDrop = 0;
+    if (jumpW > 0.01) {
+      const u = loco.u;
+      const crouch = (smooth(0, 0.14, u) * (1 - smooth(0.14, 0.2, u)) + smooth(0.86, 0.93, u) * (1 - smooth(0.93, 1, u)) * 0.8) * jumpW;
+      const air = smooth(0.16, 0.28, u) * (1 - smooth(0.8, 0.9, u)) * jumpW;
+      hipsDrop = 0.2 * crouch;
+      add("leftUpperLeg", -0.8 * crouch - 1.2 * air);
+      add("rightUpperLeg", -0.8 * crouch - 0.35 * air);
+      add("leftLowerLeg", 1.4 * crouch + 1.1 * air);
+      add("rightLowerLeg", 1.4 * crouch + 1.2 * air);
+      add("leftUpperArm", 0.6 * crouch - 1.4 * air);
+      add("rightUpperArm", 0.6 * crouch - 1.4 * air);
+      add("spine", 0.25 * crouch + 0.08 * air);
+      add("head", -0.12 * air);
+    }
+
+    const ease = snap ? 1 : 1 - Math.exp(-(12 + 18 * Math.max(walkW, jumpW)) * dt);
     for (const name in T) {
       const bone = bones[name];
       if (!bone) continue;
@@ -116,7 +161,7 @@ export function createPoser(vrm, moodName = "normal") {
     const hipsTarget = [sway * 0.03, bounce * 0.03 * fistpump - sad * 0.015];
     curHips[0] += (hipsTarget[0] - curHips[0]) * ease;
     curHips[1] += (hipsTarget[1] - curHips[1]) * ease;
-    bones.hips.position.set(hipsBase.x + curHips[0], hipsBase.y + curHips[1], hipsBase.z);
+    bones.hips.position.set(hipsBase.x + curHips[0], hipsBase.y + curHips[1] - hipsDrop, hipsBase.z);
 
     // face: a soft blink every few seconds; scorn and side-eye half-close the lids
     const phase = (t % 3.7) / 0.18;
