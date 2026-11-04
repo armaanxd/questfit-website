@@ -215,6 +215,8 @@ async function mountJD() {
   const vrm = (await loader.loadAsync("./assets/models/jd.vrm")).userData.vrm;
   const host = $('[data-peak="canvas"]');
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  // Same cap as the app: uncapped, JD's 57 morph targets become 8096x1 textures that GPUs pad to ~880 MB.
+  renderer.capabilities.maxTextureSize = Math.min(renderer.capabilities.maxTextureSize, 1024);
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   host.append(renderer.domElement);
