@@ -1,18 +1,23 @@
 # QuestFit website
 
-The marketing site for the QuestFit app. Plain HTML, CSS and JavaScript: no build step. Outside scripts, all from jsDelivr: Three.js and `@pixiv/three-vrm` (JD, loaded after first paint) and Lenis (smooth scrolling).
+The marketing site for the QuestFit app. Plain HTML, CSS and JavaScript: no build step. Outside scripts, all from jsDelivr: Three.js and `@pixiv/three-vrm` (JD at the level 16 moment, desktop only).
+
+The page is a "live surface" built with the scroll-craft skill: it behaves like the app, and scrolling levels a demo campaign from 1 to 16 on the app's real rules while JD warms up. The brief is in `scrollcraft/builds/questfit/BRIEF.md`.
 
 | File | What it is |
 |---|---|
-| `index.html` | The landing page |
+| `index.html` | The landing page: eight acts (Today, Classes, Stakes, Stats, Level 15, Level 16, The app, New campaign) |
+| `page.js` | The demo campaign: the XP keyframes, HUD, class picker, stakes switch, campaign log, JD's lines, the closing form, and the 3D JD at level 16. The class data copies `~/Projects/questfit/game.js`, so keep it in step |
+| `page.css` | The page's styles and theme tokens; palette and fonts match the app |
+| `scrollcraft.js`, `scrollcraft.css` | The scroll-craft engine (pinning, sideways rail, reveals). Don't edit; theme it from `page.css` |
+| `styles.css` | Styles for `privacy.html` only |
 | `privacy.html` | Privacy policy (draft, see below) |
-| `styles.css` | All styles; palette and fonts match the app |
-| `main.js` | Google Play button and the playable quest demo |
-| `assets/` | App screenshots, favicon, and `jd-hero.webp` and `jd-aloof/grudging/warm/proud.webp` (transparent still renders of JD for the hero and the attitude cards; retake them if the model or poses change) |
-| `assets/jdstage.js`, `assets/jdpose.js`, `assets/jdvoice.js`, `assets/models/jd.vrm` | JD, one 3D character for the whole page. `jdstage.js` puts a small canvas in page space and walks, runs and jumps JD across the page's own elements (the selector list at the top of the file): as you scroll he leaps to the next platform in view. `data-jd-move` on a section plays a move as it arrives. `jdpose.js` and `jdvoice.js` are copied from `~/Projects/questfit` (keep in step). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification. Visitors who prefer reduced motion or save data keep the still images. |
-| `assets/app-tour.webm` | The 30-second video in "See it in motion" (a screen recording of the app) |
+| `assets/` | App screenshots, favicon, and `jd-hero.webp` and `jd-aloof/grudging/warm/proud.webp` (transparent still renders of JD; retake them if the model or poses change) |
+| `assets/jdpose.js`, `assets/jdvoice.js`, `assets/models/jd.vrm` | JD. `jdpose.js` and `jdvoice.js` are copied from `~/Projects/questfit` (keep in step). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification. Phones, reduced motion and save data keep the still image |
+| `assets/app-tour.webm` | The 30-second video in "The app" (a screen recording of the app) |
 | `tools/capture-screens.mjs` | Retakes the app screenshots |
-| `tools/record-video.mjs` | Re-records `assets/app-tour.webm` from the running app (`npm run dev` in `~/Projects/questfit`). The step captions beside the video follow its clock, so if the video's pacing changes, update the `data-at` seconds in `index.html` |
+| `tools/record-video.mjs` | Re-records `assets/app-tour.webm` from the running app (`npm run dev` in `~/Projects/questfit`) |
+| `scrollcraft/` | The build brief and the fingerprint registry the skill checks new builds against |
 
 ## View it locally
 
@@ -25,10 +30,7 @@ Then open http://localhost:8080.
 
 ## Turn on the Google Play button
 
-1. In `main.js`, set `PLAY_STORE_URL` to the app's Play Store link.
-2. Download the official "Get it on Google Play" badge from https://play.google.com/intl/en_us/badges/ and save it as `assets/google-play-badge.png`. Google requires its own badge artwork.
-
-Until then, every download button shows "Coming soon to Google Play".
+The page has no store link yet: the closing form says "QuestFit isn't on Google Play yet". When the listing is live, add the official "Get it on Google Play" badge (https://play.google.com/intl/en_us/badges/, saved as `assets/google-play-badge.png`; Google requires its own artwork) linking to the listing, in the `#start` form in `index.html`.
 
 ## Before publishing
 

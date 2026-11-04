@@ -1,346 +1,288 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QuestFit: your fitness journey is the main quest</title>
-  <meta name="description" content="QuestFit turns daily workouts into an RPG campaign. Clear quests, earn XP and rank up from E to S, one day at a time." />
-  <meta name="theme-color" content="#070812" />
-  <meta property="og:title" content="QuestFit" />
-  <meta property="og:description" content="Your fitness journey is the main quest." />
-  <meta property="og:image" content="assets/screen-dashboard.jpg" />
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" />
-  <link rel="stylesheet" href="styles.css" />
-  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js", "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.5/lib/three-vrm.module.js", "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } }</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QuestFit · your training is the main quest</title>
+<meta name="description" content="QuestFit is a fitness RPG for Android. Clear real workouts, earn XP, rank up from E to S, and win over a guide who starts out unimpressed.">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="page.css">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js", "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.5/lib/three-vrm.module.js", "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } }</script>
 </head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
+<body data-class="warrior">
 
-  <header class="site-header">
-    <nav class="nav wrap" aria-label="Main">
-      <a class="logo" href="#top" aria-label="QuestFit home">Q<span>/</span>F</a>
-      <ul class="nav-links">
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#classes">Classes</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
-      <div class="play-slot play-slot--small" data-play></div>
-    </nav>
-  </header>
+<a class="skip" href="#today">Skip to content</a>
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
 
-  <main id="main">
-    <section class="hero wrap" id="top">
-      <div class="runes" aria-hidden="true"></div>
-      <div class="hero-copy">
-        <p class="pill"><span aria-hidden="true">✦</span> Meet JD, your guide</p>
-        <h1 class="hero-title">
-          <span class="line">Your fitness journey</span>
-          <span class="line">is the main quest.</span>
-        </h1>
-        <p class="hero-lede">QuestFit turns daily workouts into an RPG campaign. Clear quests, earn XP and rank up from E to S, one day at a time.</p>
-        <div class="hero-actions">
-          <div class="play-slot" data-play></div>
-          <p class="hero-note">Coming to Android first. iPhone after.</p>
-        </div>
-      </div>
-      <div class="hero-scene">
-        <figure class="phone hero-phone">
-          <img src="assets/screen-dashboard.jpg" width="390" height="844" alt="The QuestFit dashboard: a greeting, the day streak, XP and coins, and today's main quest at 67%." />
-        </figure>
-        <img class="hero-jd" src="assets/jd-hero.webp" width="267" height="400" alt="JD, the QuestFit guide: a young adventurer in a black and grey tech jacket." />
-        <p class="chip chip--quest" aria-hidden="true">⚔ Break the Iron Gate <strong>20 / 30 min</strong></p>
-        <p class="chip chip--tier" aria-hidden="true">JD is <strong>Grudging</strong> · Level 7</p>
-      </div>
-    </section>
-
-    <section class="demo" aria-labelledby="demo-title">
-      <div class="wrap demo-grid">
-        <div class="demo-copy">
-          <p class="pill">Playable demo</p>
-      <h2 id="demo-title">Try today's main quest.</h2>
-          <p>Every quest has a target, and the main quest only counts with proof: a workout from your watch, or the in-app timer. Start a session, fill the bar, collect the reward. This demo runs a minute every tenth of a second.</p>
-        </div>
-
-        <div class="demo-stage" data-stagger>
-          <div class="guide-wrap">
-            <div class="guide" id="guide" aria-hidden="true"><img src="assets/jd-aloof.webp" alt="" width="360" height="480" /></div>
-            <p class="guide-says" id="guide-says">I'm JD. Your main quest is waiting.</p>
-          </div>
-
-          <article class="quest" id="quest">
-            <div class="quest-head">
-              <span class="quest-icon" aria-hidden="true">⚔</span>
-              <div>
-                <p class="quest-kind">Main quest</p>
-                <h3>Break the Iron Gate</h3>
-              </div>
-              <p class="quest-reward">+100 XP<br />+20 coins</p>
-            </div>
-            <p class="quest-desc">Complete a focused strength session and clear the first gate.</p>
-            <div class="bar" role="progressbar" aria-label="Quest progress" aria-valuemin="0" aria-valuemax="30" aria-valuenow="0" id="quest-bar"><span></span></div>
-            <div class="quest-foot">
-              <p class="quest-count" id="quest-count">0 / 30 min</p>
-              <button class="btn btn--primary" type="button" id="quest-log">Start session</button>
-            </div>
-            <div class="reward" id="reward" aria-live="polite"></div>
-          </article>
-
-          <div class="xp" aria-label="Level progress">
-            <p><strong id="xp-level">Level 1</strong> <span id="xp-text">120 / 250 XP</span></p>
-            <div class="bar bar--xp"><span id="xp-fill" style="width:48%"></span></div>
-          </div>
-          <p class="jd-mood">JD is <strong id="jd-label">Aloof</strong>. Meet him at level
-            <button type="button" data-level="1" aria-pressed="true">1</button>
-            <button type="button" data-level="6" aria-pressed="false">6</button>
-            <button type="button" data-level="11" aria-pressed="false">11</button>
-            <button type="button" data-level="16" aria-pressed="false">16</button>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="jd wrap" id="jd" aria-labelledby="jd-title">
-      <p class="pill">Your guide</p>
-      <h2 id="jd-title">He won't be impressed. At first.</h2>
-      <p class="jd-lede">JD is your guide, and he starts out aloof. Every few levels he warms up a little, in how he reacts and in what he says. Earn it.</p>
-      <ol class="jd-tiers" data-stagger>
-        <li class="jd-tier jd-tier--aloof">
-          <img src="assets/jd-aloof.webp" width="360" height="480" loading="lazy" alt="JD looking down at you with half-closed eyes, chin raised." />
-          <p class="jd-levels">Levels 1–5</p>
-          <h3>Aloof</h3>
-          <p class="jd-quote">“Done. About time.”</p>
-        </li>
-        <li class="jd-tier jd-tier--grudging">
-          <img src="assets/jd-grudging.webp" width="360" height="480" loading="lazy" alt="JD with his head turned away, glancing at you with a small smirk." />
-          <p class="jd-levels">Levels 6–10</p>
-          <h3>Grudging</h3>
-          <p class="jd-quote">“Fine. That counts.”</p>
-        </li>
-        <li class="jd-tier jd-tier--warm">
-          <img src="assets/jd-warm.webp" width="360" height="480" loading="lazy" alt="JD giving a thumbs up." />
-          <p class="jd-levels">Levels 11–15</p>
-          <h3>Warm</h3>
-          <p class="jd-quote">“Nice work. Really.”</p>
-        </li>
-        <li class="jd-tier jd-tier--proud">
-          <img src="assets/jd-proud.webp" width="360" height="480" loading="lazy" alt="JD pumping his fist with a big grin." />
-          <p class="jd-levels">Level 16+</p>
-          <h3>Proud</h3>
-          <p class="jd-quote">“That's how it's done. Proud of you.”</p>
-        </li>
-      </ol>
-      <p class="jd-try"><a href="#demo-title">Meet him at each level in the demo above</a></p>
-    </section>
-
-    <section class="how wrap" id="how" data-jd-move="sideeye" aria-labelledby="how-title">
-      <p class="pill">How it works</p>
-      <h2 id="how-title">How a campaign works</h2>
-      <ol class="steps" data-stagger>
-        <li>
-          <h3>Choose your class</h3>
-          <p>Warrior, Ranger, Mage or All-Rounder. Your class decides your daily quests and the workouts we suggest, matched to your fitness level.</p>
-        </li>
-        <li>
-          <h3>Clear the daily board</h3>
-          <p>A main quest that protects your streak, two side quests, and a class trial. Steps and workouts sync from Health Connect, from your phone or a Galaxy Watch. No watch? The in-app timer counts. The board resets at midnight in your timezone.</p>
-        </li>
-        <li>
-          <h3>Grow your character</h3>
-          <p>Earn XP and coins, level up, and climb from E-Rank to S-Rank. Eight stats track how you actually train.</p>
-        </li>
-      </ol>
-    </section>
-
-    <section class="classes" id="classes" data-jd-move="thumbsup" aria-labelledby="classes-title">
-      <div class="wrap">
-        <p class="pill">Pick a path</p>
-      <h2 id="classes-title">Four ways to play</h2>
-        <ul class="class-list" data-stagger>
-          <li class="class class--warrior">
-            <span class="class-icon" aria-hidden="true"><span class="glyph">⚔</span></span>
-            <div class="class-body">
-              <h3>Warrior</h3>
-              <p class="class-focus">Strength</p>
-              <p>Daily main quest: 30 minutes of strength work to break the Iron Gate.</p>
-            </div>
-          </li>
-          <li class="class class--ranger">
-            <span class="class-icon" aria-hidden="true"><span class="glyph">➶</span></span>
-            <div class="class-body">
-              <h3>Ranger</h3>
-              <p class="class-focus">Endurance</p>
-              <p>Daily main quest: 20 minutes of cardio to run the Windline.</p>
-            </div>
-          </li>
-          <li class="class class--mage">
-            <span class="class-icon" aria-hidden="true"><span class="glyph">✦</span></span>
-            <div class="class-body">
-              <h3>Mage</h3>
-              <p class="class-focus">Mobility</p>
-              <p>Daily main quest: 20 minutes of mobility to channel the Leyline.</p>
-            </div>
-          </li>
-          <li class="class class--allrounder">
-            <span class="class-icon" aria-hidden="true"><span class="glyph">✹</span></span>
-            <div class="class-body">
-              <h3>All-Rounder</h3>
-              <p class="class-focus">Everything</p>
-              <p>Daily main quest: a 45-minute circuit. The hardest path, and the slowest to rank up.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="stakes wrap" data-jd-move="sad" aria-labelledby="stakes-title">
-      <p class="pill">Your stakes</p>
-      <h2 id="stakes-title">You choose what a missed day costs.</h2>
-      <p class="stakes-lede">Stakes keep you coming back. Skip your main quest, or skip the app for a day, and it counts as missed. You set how high the stakes are, and you can change it anytime.</p>
-      <div class="modes" data-stagger>
-        <div class="mode mode--soft">
-          <h3>Soft</h3>
-          <p>Your streak pauses. Nothing else happens.</p>
-        </div>
-        <div class="mode mode--balanced">
-          <h3>Balanced</h3>
-          <p>Your streak resets, quests give 25% less XP until you clear your next main quest, and your character looks tired.</p>
-        </div>
-        <div class="mode mode--hardcore">
-          <h3>Hardcore</h3>
-          <p>Your streak resets, 50% less XP until your next main quest, you lose 5% of your coins, and your character is injured.</p>
-        </div>
-      </div>
-      <p class="stakes-safe">Penalties are always virtual: never real money, never public. A shield absorbs your first miss. Two rest days and two sick days a month protect your streak, no questions asked.</p>
-    </section>
-
-    <section class="tour" id="tour" aria-labelledby="tour-title" data-jd-move="nod">
-      <div class="wrap">
-        <p class="pill">The app</p>
-      <h2 id="tour-title">Inside the app</h2>
-        <div class="tour-grid">
-          <ol class="tour-steps">
-          <li class="tour-step" data-shot="0">
-            <span class="tour-num" aria-hidden="true">01</span>
-            <h3>Your day at a glance</h3>
-            <p>Your greeting, streak, XP and coins, and today's main quest, with JD keeping an eye on you.</p>
-            <div class="phone tour-inline"><img src="assets/screen-dashboard.jpg" width="390" height="844" loading="lazy" alt="The QuestFit dashboard: a greeting, the day streak, XP and coins, and today's main quest at 67%." /></div>
-          </li>
-          <li class="tour-step" data-shot="1">
-            <span class="tour-num" aria-hidden="true">02</span>
-            <h3>The daily board</h3>
-            <p>A main quest that protects your streak, two side quests and a class trial. Each one needs proof: a watch workout or the timer.</p>
-            <div class="phone tour-inline"><img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="The quest board: the main quest at 20 of 30 minutes with a Timer badge and a Start session button." /></div>
-          </li>
-          <li class="tour-step" data-shot="2">
-            <span class="tour-num" aria-hidden="true">03</span>
-            <h3>Your stat sheet</h3>
-            <p>Eight attributes, such as strength, cardio and discipline, grow from how you actually train.</p>
-            <div class="phone tour-inline"><img src="assets/screen-stats.jpg" width="390" height="844" loading="lazy" alt="A radar chart of eight attributes such as strength, cardio and discipline." /></div>
-          </li>
-          <li class="tour-step" data-shot="3">
-            <span class="tour-num" aria-hidden="true">04</span>
-            <h3>Your character and rank</h3>
-            <p>Climb from E-Rank to S-Rank and watch your class page fill in as you progress.</p>
-            <div class="phone tour-inline"><img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="The character page showing class, rank and progress to the next rank." /></div>
-          </li>
-          </ol>
-          <div class="tour-phone" aria-hidden="true">
-            <div class="phone">
-            <img src="assets/screen-dashboard.jpg" width="390" height="844" loading="lazy" alt="" data-shot="0" class="is-active" />
-            <img src="assets/screen-quests.jpg" width="390" height="844" loading="lazy" alt="" data-shot="1" />
-            <img src="assets/screen-stats.jpg" width="390" height="844" loading="lazy" alt="" data-shot="2" />
-            <img src="assets/screen-character.jpg" width="390" height="844" loading="lazy" alt="" data-shot="3" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="watch" id="watch" aria-labelledby="watch-title">
-      <div class="wrap">
-        <p class="pill">See it in motion</p>
-        <h2 id="watch-title">A day in QuestFit, in thirty seconds.</h2>
-        <div class="watch-grid">
-          <ol class="watch-steps" aria-label="What the video shows">
-          <li data-at="0"><strong>Create your campaign</strong><span>Pick a name and a class. Your campaign lives on your phone.</span></li>
-          <li data-at="3"><strong>Your day at a glance</strong><span>Streak, XP, coins and today's main quest, with JD keeping an eye on you.</span></li>
-          <li data-at="10"><strong>Clear the daily board</strong><span>Start the timer, finish the main quest, log your sets and steps.</span></li>
-          <li data-at="21.5"><strong>Watch your stats grow</strong><span>Eight attributes fill in from how you actually train.</span></li>
-          <li data-at="24"><strong>Check your character</strong><span>Rank, class trial and progress, all in one place.</span></li>
-          </ol>
-          <figure class="phone watch-phone">
-            <video id="tour-video" src="assets/app-tour.webm" poster="assets/screen-dashboard.jpg" muted playsinline loop preload="none" aria-label="A walk through QuestFit: creating a campaign, the dashboard, the quest board with a running timer, the stat sheet and the character page."></video>
-            <button class="watch-toggle" type="button" aria-label="Play the video" aria-pressed="false">▶</button>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="soon wrap" aria-labelledby="soon-title">
-      <p class="pill">On the roadmap</p>
-      <h2 id="soon-title">Coming soon</h2>
-      <p class="soon-lede">Not in the app yet. This is what we're building next.</p>
-      <ul class="soon-list" data-stagger>
-        <li>
-          <h3>A character that grows with you</h3>
-          <p>Your avatar evolves with every rank, from rough leather at E-Rank to legendary gear at S-Rank. Male and female versions.</p>
-        </li>
-        <li>
-          <h3>Reminders you control</h3>
-          <p>A nudge when new quests are ready, when your main quest hasn't started, and before the day ends. You pick the times, and they run on your phone.</p>
-        </li>
-        <li>
-          <h3>Food log</h3>
-          <p>Snap a photo of your meal and get calories, protein, carbs and fat.</p>
-        </li>
-      </ul>
-    </section>
-
-    <section class="faq wrap" id="faq" aria-labelledby="faq-title">
-      <p class="pill">FAQ</p>
-      <h2 id="faq-title">Questions</h2>
-      <details>
-        <summary>Where is my data stored?</summary>
-        <p>On your phone. QuestFit has no accounts and doesn't send your campaign or your health data to a server. Read the <a href="privacy.html">privacy policy</a>.</p>
-      </details>
-      <details>
-        <summary>Do I need a smartwatch?</summary>
-        <p>No. Your phone counts your steps, and the in-app timer completes any main quest. A watch workout with heart rate counts as proof too.</p>
-      </details>
-      <details>
-        <summary>What if I'm sick or need rest?</summary>
-        <p>Use a rest day or a sick day. You get two of each every month, and they protect your streak with no penalty.</p>
-      </details>
-      <details>
-        <summary>Is QuestFit on iPhone?</summary>
-        <p>Android comes first. An iPhone version is planned.</p>
-      </details>
-      <details>
-        <summary>Is this medical advice?</summary>
-        <p>No. Workout suggestions are general guidance. Check with a doctor before starting a new training plan.</p>
-      </details>
-    </section>
-
-    <section class="cta wrap" data-jd-move="fistpump" aria-labelledby="cta-title">
-      <p class="pill">Coming soon</p>
-      <h2 id="cta-title">Start your campaign.</h2>
-      <div class="play-slot" data-play></div>
-      <div class="cta-jd"><img src="assets/jd-proud.webp" alt="" width="360" height="480" loading="lazy" /></div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrap footer-row">
-      <a class="logo" href="#top" aria-label="QuestFit home">Q<span>/</span>F</a>
-      <a href="privacy.html">Privacy policy</a>
-      <p>© 2026 QuestFit · Guide JD: AvatarSample_C by pixiv VRoid Project</p>
+<!-- The app's own chrome is the navigation: the HUD reads out the demo campaign, the tabs jump. -->
+<header class="hud">
+  <div class="hud__row">
+    <a class="hud__mark" href="#today" aria-label="QuestFit, back to the top">Q<span>/</span>F</a>
+    <div class="hud__level" aria-label="Demo campaign level">
+      <span class="hud__lv">Lv <b data-hud="level">1</b></span>
+      <span class="hud__bar" role="progressbar" aria-label="XP toward next level" aria-valuemin="0" aria-valuemax="250" aria-valuenow="0" data-hud="bar"><i></i></span>
+      <span class="hud__xp"><b data-hud="xpin">0</b> / 250 XP</span>
     </div>
-  </footer>
+    <dl class="hud__stats">
+      <div><dt>Day</dt><dd data-hud="day">1</dd></div>
+      <div><dt>Streak</dt><dd data-hud="streak">0</dd></div>
+      <div><dt>Coins</dt><dd data-hud="coins">0</dd></div>
+      <div><dt>Rank</dt><dd>E</dd></div>
+    </dl>
+    <a class="btn btn--small hud__cta" href="#start">Start your campaign</a>
+  </div>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#today">Today</a>
+    <a href="#classes">Classes</a>
+    <a href="#stakes">Stakes</a>
+    <a href="#stats">Stats</a>
+    <a href="#app">The app</a>
+  </nav>
+  <p class="hud__demo" data-hud="demo">Demo campaign · scroll to train</p>
+</header>
 
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-  <script type="module" src="main.js"></script>
+<!-- JD rides along in the corner, like the companion panel in the app. -->
+<aside class="dock" aria-label="JD, your guide">
+  <span class="crop dock__face"><img data-jd="face" src="./assets/jd-aloof.webp" width="360" height="480" alt=""></span>
+  <div class="dock__talk">
+    <p class="dock__who">JD · <span data-jd="tier">Aloof</span></p>
+    <p class="dock__line" data-jd="line">Main quest's up. Try to keep up.</p>
+  </div>
+</aside>
+
+<main>
+
+  <!-- 1 · TODAY · curiosity. The board is already there; your scroll runs the timer. -->
+  <section id="today" data-sc-act="pin" data-sc-span="2.2" data-sc-drift="#0b1119" data-q-act>
+    <div data-sc-stage class="today">
+      <div class="today__intro">
+        <p class="status">Day 1 · <span data-classname>Warrior</span> · demo campaign</p>
+        <h1 class="title">Your training is the main quest.</h1>
+        <p class="sc-body">QuestFit turns real workouts into an RPG campaign on Android. This page is a demo: scroll to train.</p>
+        <a class="btn" href="#start">Start your campaign</a>
+      </div>
+
+      <section class="board" aria-label="Today's quest board">
+        <header class="board__head"><h2>Daily board</h2><span>Resets at midnight</span></header>
+        <article class="quest quest--main">
+          <span class="quest__icon" aria-hidden="true" data-q="icon">⚔</span>
+          <div class="quest__body">
+            <p class="quest__tag">Main quest · protects your streak</p>
+            <h3 data-q="title">Break the Iron Gate</h3>
+            <p class="quest__desc" data-q="desc">Complete a focused strength session and clear the first gate.</p>
+            <div class="meter" aria-hidden="true"><i class="meter__fill meter__fill--main"></i></div>
+            <p class="quest__meta"><span><b class="timer" data-q="done">0</b> / <span data-q="target">30</span> min</span><span>Proof: in-app timer</span></p>
+          </div>
+          <p class="quest__reward" data-q="reward">+100 XP · +20 coins</p>
+          <p class="stamp" aria-hidden="true">Cleared</p>
+        </article>
+        <ul class="side" aria-label="Side quests">
+          <li><span data-q="s1">March the Ember Road</span><span data-q="s1t">6,000 steps</span></li>
+          <li><span data-q="s2">Brace the Shield</span><span data-q="s2t">10 min</span></li>
+          <li><span data-q="s3">Forge a Training Sigil</span><span data-q="s3t">3 sets · class trial</span></li>
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <!-- 2 · CLASSES · ownership. Lateral travel reads as options. Picking one rewrites the board. -->
+  <section id="classes" data-sc-act="pan" data-sc-span="4.4" data-sc-drift="#0d1420" data-q-act>
+    <div data-sc-stage class="classes">
+      <div class="rail" data-sc-pan="0.06">
+        <div class="rail__lead">
+          <h2 class="heading">Pick a class.</h2>
+          <p class="sc-body">Your class decides your daily board. Tap one and the board you just cleared changes with it.</p>
+        </div>
+        <button class="cls" type="button" data-pick="warrior" aria-pressed="true">
+          <span class="cls__icon" aria-hidden="true">⚔</span>
+          <span class="cls__name">Warrior</span>
+          <dl class="cls__label">
+            <div><dt>Focus</dt><dd>Strength</dd></div>
+            <div><dt>Main quest</dt><dd>Break the Iron Gate · 30 min</dd></div>
+            <div><dt>Full board</dt><dd>270 XP · 53 coins a day</dd></div>
+          </dl>
+        </button>
+        <button class="cls" type="button" data-pick="ranger" aria-pressed="false">
+          <span class="cls__icon" aria-hidden="true">➶</span>
+          <span class="cls__name">Ranger</span>
+          <dl class="cls__label">
+            <div><dt>Focus</dt><dd>Endurance</dd></div>
+            <div><dt>Main quest</dt><dd>Run the Windline · 20 min</dd></div>
+            <div><dt>Full board</dt><dd>280 XP · 55 coins a day</dd></div>
+          </dl>
+        </button>
+        <button class="cls" type="button" data-pick="mage" aria-pressed="false">
+          <span class="cls__icon" aria-hidden="true">✦</span>
+          <span class="cls__name">Mage</span>
+          <dl class="cls__label">
+            <div><dt>Focus</dt><dd>Mobility</dd></div>
+            <div><dt>Main quest</dt><dd>Channel the Leyline · 20 min</dd></div>
+            <div><dt>Full board</dt><dd>280 XP · 54 coins a day</dd></div>
+          </dl>
+        </button>
+        <button class="cls" type="button" data-pick="allrounder" aria-pressed="false">
+          <span class="cls__icon" aria-hidden="true">✹</span>
+          <span class="cls__name">All-Rounder</span>
+          <dl class="cls__label">
+            <div><dt>Focus</dt><dd>Everything</dd></div>
+            <div><dt>Main quest</dt><dd>Champion Circuit · 45 min</dd></div>
+            <div><dt>Full board</dt><dd>365 XP · 73 coins a day</dd></div>
+          </dl>
+        </button>
+        <p class="rail__note">The hardest path ranks slowest. Your class is matched to your fitness level when you start.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · STAKES · unease. A real control, the app's real rules. -->
+  <section id="stakes" class="sc-section stakes" data-q-act>
+    <div class="sc-wrap stakes__grid">
+      <div class="sc-stack" data-sc-in data-sc-stagger="60">
+        <h2 class="heading">What does a missed day cost you?</h2>
+        <p class="sc-body">Skip your main quest, or skip the app for a day, and it counts as missed. You set the stakes, and you can change them anytime.</p>
+      </div>
+      <div class="stakes__panel" data-sc-in>
+        <fieldset class="seg">
+          <legend class="sr-only">Stakes</legend>
+          <label><input type="radio" name="stakes" value="soft"><span>Soft</span></label>
+          <label><input type="radio" name="stakes" value="balanced" checked><span>Balanced</span></label>
+          <label><input type="radio" name="stakes" value="hardcore"><span>Hardcore</span></label>
+        </fieldset>
+        <dl class="outcome" aria-live="polite">
+          <div><dt>Streak</dt><dd data-stake="streak">Resets</dd></div>
+          <div><dt>XP</dt><dd data-stake="xp">25% less until you clear your next main quest</dd></div>
+          <div><dt>Coins</dt><dd data-stake="coins">Kept</dd></div>
+          <div><dt>Your character</dt><dd data-stake="look">Looks tired</dd></div>
+        </dl>
+        <p class="fine">Always virtual: never real money, never public. A shield absorbs your first miss, and two rest days and two sick days a month protect your streak.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · THE GRIND · momentum. Days tick in the HUD, the sheet fills, JD thaws. -->
+  <section id="stats" data-sc-act="pin" data-sc-span="2.6" data-sc-drift="#0f1622" data-q-act>
+    <div data-sc-stage class="grind">
+      <div class="grind__intro">
+        <h2 class="heading">Two weeks in one scroll.</h2>
+        <p class="sc-body">Every screen here is a few days of full boards. Eight stats grow from what you actually log, and the log below is your campaign so far.</p>
+        <ol class="log" data-log aria-label="Campaign log"></ol>
+      </div>
+      <section class="sheet" aria-label="Stat sheet">
+        <header class="board__head"><h3>Stat sheet</h3><span data-classname>Warrior</span></header>
+        <ul class="bars">
+          <li data-stat="strength"><span>Strength</span><i></i><b>0</b></li>
+          <li data-stat="cardio"><span>Cardio</span><i></i><b>0</b></li>
+          <li data-stat="mobility"><span>Mobility</span><i></i><b>0</b></li>
+          <li data-stat="endurance"><span>Endurance</span><i></i><b>0</b></li>
+          <li data-stat="discipline"><span>Discipline</span><i></i><b>0</b></li>
+          <li data-stat="recovery"><span>Recovery</span><i></i><b>0</b></li>
+          <li data-stat="agility"><span>Agility</span><i></i><b>0</b></li>
+          <li data-stat="versatility"><span>Versatility</span><i></i><b>0</b></li>
+        </ul>
+        <p class="fine">Demo values: a full board every day for your class.</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- 5 · LEVEL 15 · held breath. Authored silence before the peak. -->
+  <section id="fifteen" class="quiet" data-q-act>
+    <div class="quiet__inner" data-sc-in>
+      <p class="quiet__big">Level 15.</p>
+      <p class="quiet__small">3,740 / 3,750 XP. One side quest left.</p>
+    </div>
+  </section>
+
+  <!-- 6 · LEVEL 16 · pride. THE PEAK: the largest span, the frame opens on JD. -->
+  <section id="sixteen" data-sc-act="pin" data-sc-span="3.2" data-sc-drift="#120f0a" data-q-act>
+    <div data-sc-stage class="peak">
+      <figure class="peak__jd" data-sc-reveal="iris" data-sc-reveal-at="0.04 0.34">
+        <img data-peak="still" src="./assets/jd-hero.webp" width="600" height="900" alt="JD, your guide, celebrating with a fist pump">
+        <div class="peak__canvas" data-peak="canvas"></div>
+      </figure>
+      <div class="peak__copy">
+        <p class="peak__lv" data-sc-cue="0.3 1 0.08 0.05" data-sc-rise="0">Level 16</p>
+        <p class="peak__line" data-sc-cue="0.4 0.62 0.08 0.08">“Level 16! You're not the person who started.”</p>
+        <p class="peak__line peak__line--last" data-sc-cue="0.6 1 0.08 0.05">“That's how it's done. Proud of you.”</p>
+      </div>
+      <ol class="thaw" data-sc-cue="0.72 1 0.1 0.05" aria-label="How JD's attitude changes with your level">
+        <li><span class="crop"><img src="./assets/jd-aloof.webp" width="360" height="480" alt=""></span><b>Aloof</b><span>Levels 1 to 5</span></li>
+        <li><span class="crop"><img src="./assets/jd-grudging.webp" width="360" height="480" alt=""></span><b>Grudging</b><span>6 to 10</span></li>
+        <li><span class="crop"><img src="./assets/jd-warm.webp" width="360" height="480" alt=""></span><b>Warm</b><span>11 to 15</span></li>
+        <li><span class="crop"><img src="./assets/jd-proud.webp" width="360" height="480" alt=""></span><b>Proud</b><span>16 and up</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7 · THE APP · trust. Ordinary document flow, compressed. -->
+  <section id="app" class="sc-section app" data-q-act>
+    <div class="sc-wrap">
+      <div class="sc-stack app__head" data-sc-in data-sc-stagger="60">
+        <h2 class="heading">That was the demo. This is the app.</h2>
+        <p class="sc-body">The real screens, and thirty seconds of a real day. Your campaign and your health data stay on your phone: no accounts, no server.</p>
+      </div>
+      <div class="screens" data-sc-in data-sc-stagger="70">
+        <figure><img src="./assets/screen-dashboard.jpg" width="780" height="1688" loading="lazy" alt="The QuestFit dashboard: greeting, streak, XP, coins and today's main quest"><figcaption><b>Today</b>Streak, XP, coins and the main quest.</figcaption></figure>
+        <figure><img src="./assets/screen-quests.jpg" width="780" height="1688" loading="lazy" alt="The daily quest board with a main quest, two side quests and a class trial"><figcaption><b>Board</b>Each quest needs proof: a watch workout or the timer.</figcaption></figure>
+        <figure class="screens__video">
+          <video src="./assets/app-tour.webm" poster="./assets/screen-dashboard.jpg" width="780" height="1688" controls muted playsinline preload="none" aria-label="Thirty seconds in QuestFit: creating a campaign, the dashboard, the quest board with a running timer, the stat sheet and the character page."></video>
+          <figcaption><b>A day, in 30 seconds</b>Create a campaign, clear the board, watch the stats grow.</figcaption>
+        </figure>
+        <figure><img src="./assets/screen-stats.jpg" width="780" height="1688" loading="lazy" alt="The stat sheet with eight attributes"><figcaption><b>Stats</b>Eight attributes, from how you actually train.</figcaption></figure>
+        <figure><img src="./assets/screen-character.jpg" width="780" height="1688" loading="lazy" alt="The character page showing rank and class progress"><figcaption><b>Character</b>From E-Rank to S-Rank.</figcaption></figure>
+      </div>
+
+      <div class="help">
+        <section class="help__faq" aria-labelledby="help-h">
+          <h3 id="help-h">Help</h3>
+          <details><summary>Do I need a smartwatch?</summary><p>No. Your phone counts your steps, and the in-app timer completes any main quest. A watch workout with heart rate, synced through Health Connect, counts as proof too.</p></details>
+          <details><summary>Where is my data stored?</summary><p>On your phone. QuestFit has no accounts and doesn't send your campaign or your health data to a server. Read the <a href="./privacy.html">privacy policy</a>.</p></details>
+          <details><summary>What if I'm sick or need rest?</summary><p>Use a rest day or a sick day. You get two of each every month, and they protect your streak with no penalty.</p></details>
+          <details><summary>Is QuestFit on iPhone?</summary><p>Android comes first. An iPhone version is planned.</p></details>
+          <details><summary>Is this medical advice?</summary><p>No. Workout suggestions are general guidance. Check with a doctor before starting a new training plan.</p></details>
+        </section>
+        <section class="help__next" aria-labelledby="next-h">
+          <h3 id="next-h">On the roadmap</h3>
+          <p class="fine">Not in the app yet.</p>
+          <ul>
+            <li><b>A character that grows with you.</b> Rough leather at E-Rank, legendary gear at S-Rank.</li>
+            <li><b>Reminders you control.</b> You pick the times, and they run on your phone.</li>
+            <li><b>Food log.</b> Snap a meal, get calories, protein, carbs and fat.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · YOUR TURN · resolve. The close is an input, and JD resets to aloof. -->
+  <section id="start" data-sc-act="pin" data-sc-span="1.3" data-sc-drift="#0b1119" data-q-act>
+    <div data-sc-stage class="close">
+      <form class="newgame" data-newgame data-sc-cue="0.02" data-sc-rise="0">
+        <h2 class="heading">New campaign</h2>
+        <label for="hero-name">Name your hero</label>
+        <div class="newgame__row">
+          <input id="hero-name" name="hero" type="text" maxlength="24" autocomplete="off" placeholder="Your name" required>
+          <button class="btn" type="submit">Start your campaign</button>
+        </div>
+        <p class="newgame__out" data-newgame-out aria-live="polite">Class: <span data-classname>Warrior</span> · Level 1 · E-Rank · Day 1</p>
+        <p class="fine">QuestFit isn't on Google Play yet. Android first, iPhone after.</p>
+      </form>
+      <footer class="foot">
+        <span class="hud__mark" aria-hidden="true">Q<span>/</span>F</span>
+        <a href="./privacy.html">Privacy policy</a>
+        <span>© 2026 QuestFit · Guide JD: AvatarSample_C by pixiv VRoid Project</span>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script type="module" src="page.js"></script>
 </body>
 </html>
