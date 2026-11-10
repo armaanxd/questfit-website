@@ -58,7 +58,7 @@
 <main>
 
   <!-- 1 · TODAY · curiosity. The board is already there; your scroll runs the timer. -->
-  <section id="today" data-sc-act="pin" data-sc-span="2.2" data-sc-drift="#0b1119" data-q-act>
+  <section id="today" data-sc-act="pin" data-sc-span="2.2" data-sc-drift="#0a0b19" data-q-act>
     <div data-sc-stage class="today">
       <div class="today__intro">
         <p class="status">Day 1 · <span data-classname>Warrior</span> · demo campaign</p>
@@ -91,7 +91,7 @@
   </section>
 
   <!-- 2 · CLASSES · ownership. Lateral travel reads as options. Picking one rewrites the board. -->
-  <section id="classes" data-sc-act="pan" data-sc-span="4.4" data-sc-drift="#0d1420" data-q-act>
+  <section id="classes" data-sc-act="pan" data-sc-span="4.4" data-sc-drift="#0c0d21" data-q-act>
     <div data-sc-stage class="classes">
       <div class="rail" data-sc-pan="0.06">
         <div class="rail__lead">
@@ -159,13 +159,26 @@
           <div><dt>Coins</dt><dd data-stake="coins">Kept</dd></div>
           <div><dt>Your character</dt><dd data-stake="look">Looks tired</dd></div>
         </dl>
+        <div class="sim" data-sim aria-label="Try the stakes">
+          <div class="sim__stats">
+            <div><span>Streak</span><b data-sim="streak">13</b></div>
+            <div><span>XP rate</span><b data-sim="rate">100%</b></div>
+            <div><span>Coins</span><b data-sim="coins">735</b></div>
+            <div><span>Shield</span><b data-sim="shield">1</b></div>
+          </div>
+          <div class="sim__actions">
+            <button class="btn btn--ghost btn--small" type="button" data-sim-act="miss">Miss a day</button>
+            <button class="btn btn--small" type="button" data-sim-act="clear">Clear main quest</button>
+          </div>
+          <p class="sim__log" data-sim="log" aria-live="polite">Pick your stakes, then try missing a day.</p>
+        </div>
         <p class="fine">Always virtual: never real money, never public. A shield absorbs your first miss, and two rest days and two sick days a month protect your streak.</p>
       </div>
     </div>
   </section>
 
   <!-- 4 · THE GRIND · momentum. Days tick in the HUD, the sheet fills, JD thaws. -->
-  <section id="stats" data-sc-act="pin" data-sc-span="2.6" data-sc-drift="#0f1622" data-q-act>
+  <section id="stats" data-sc-act="pin" data-sc-span="2.6" data-sc-drift="#0e1026" data-q-act>
     <div data-sc-stage class="grind">
       <div class="grind__intro">
         <h2 class="heading">Two weeks in one scroll.</h2>
@@ -198,7 +211,7 @@
   </section>
 
   <!-- 6 · LEVEL 16 · pride. THE PEAK: the largest span, the frame opens on JD. -->
-  <section id="sixteen" data-sc-act="pin" data-sc-span="3.2" data-sc-drift="#120f0a" data-q-act>
+  <section id="sixteen" data-sc-act="pin" data-sc-span="3.2" data-sc-drift="#13101f" data-q-act>
     <div data-sc-stage class="peak">
       <figure class="peak__jd" data-sc-reveal="iris" data-sc-reveal-at="0.04 0.34">
         <img data-peak="still" src="./assets/jd-hero.webp" width="600" height="900" alt="JD, your guide, celebrating with a fist pump">
@@ -225,6 +238,21 @@
         <h2 class="heading">That was the demo. This is the app.</h2>
         <p class="sc-body">The real screens, and thirty seconds of a real day. Your campaign and your health data stay on your phone: no accounts, no server.</p>
       </div>
+      <div class="live" data-sc-in>
+        <div class="live__copy">
+          <h3 class="live__title">Play the real app.</h3>
+          <p class="sc-body">This is QuestFit itself, running in your browser with a demo hero. Open the quest board, start a session, log a set, switch your stakes. Your progress stays in this browser.</p>
+          <p class="fine">The browser version can't read Health Connect, so steps and watch workouts only verify in the Android app.</p>
+          <button class="btn btn--ghost btn--small live__reset" type="button" data-live-reset hidden>Reset the demo</button>
+        </div>
+        <div class="phone" data-live>
+          <div class="phone__screen">
+            <img class="phone__poster" src="./assets/screen-dashboard.jpg" width="780" height="1688" loading="lazy" alt="">
+            <button class="btn phone__play" type="button" data-live-start>Try it live</button>
+            <iframe class="phone__frame" title="QuestFit app demo" data-live-frame hidden></iframe>
+          </div>
+        </div>
+      </div>
       <div class="screens" data-sc-in data-sc-stagger="70">
         <figure><img src="./assets/screen-dashboard.jpg" width="780" height="1688" loading="lazy" alt="The QuestFit dashboard: greeting, streak, XP, coins and today's main quest"><figcaption><b>Today</b>Streak, XP, coins and the main quest.</figcaption></figure>
         <figure><img src="./assets/screen-quests.jpg" width="780" height="1688" loading="lazy" alt="The daily quest board with a main quest, two side quests and a class trial"><figcaption><b>Board</b>Each quest needs proof: a watch workout or the timer.</figcaption></figure>
@@ -242,7 +270,7 @@
           <details><summary>Do I need a smartwatch?</summary><p>No. Your phone counts your steps, and the in-app timer completes any main quest. A watch workout with heart rate, synced through Health Connect, counts as proof too.</p></details>
           <details><summary>Where is my data stored?</summary><p>On your phone. QuestFit has no accounts and doesn't send your campaign or your health data to a server. Read the <a href="./privacy.html">privacy policy</a>.</p></details>
           <details><summary>What if I'm sick or need rest?</summary><p>Use a rest day or a sick day. You get two of each every month, and they protect your streak with no penalty.</p></details>
-          <details><summary>Is QuestFit on iPhone?</summary><p>Android comes first. An iPhone version is planned.</p></details>
+          <details><summary>Is QuestFit on iPhone?</summary><p>No. QuestFit is Android only, downloaded straight from this page.</p></details>
           <details><summary>Is this medical advice?</summary><p>No. Workout suggestions are general guidance. Check with a doctor before starting a new training plan.</p></details>
         </section>
         <section class="help__next" aria-labelledby="next-h">
@@ -259,7 +287,7 @@
   </section>
 
   <!-- 8 · YOUR TURN · resolve. The close is an input, and JD resets to aloof. -->
-  <section id="start" data-sc-act="pin" data-sc-span="1.3" data-sc-drift="#0b1119" data-q-act>
+  <section id="start" data-sc-act="pin" data-sc-span="1.3" data-sc-drift="#0a0b19" data-q-act>
     <div data-sc-stage class="close">
       <form class="newgame" data-newgame data-sc-cue="0.02" data-sc-rise="0">
         <h2 class="heading">New campaign</h2>
@@ -285,5 +313,6 @@
 <script src="scrollcraft.js"></script>
 <script>ScrollCraft.mount(document.body);</script>
 <script type="module" src="page.js"></script>
+<script type="module" src="fun.js"></script>
 </body>
 </html>

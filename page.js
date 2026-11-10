@@ -186,7 +186,7 @@ $("[data-newgame]").addEventListener("submit", (event) => {
   if (!name) return;
   own = name;
   event.target.classList.add("is-started");
-  $("[data-newgame-out]").textContent = `${name} the ${cls.name}. Level 1, E-Rank, Day 1. See you on Google Play soon.`;
+  $("[data-newgame-out]").textContent = `${name} the ${cls.name}. Level 1, E-Rank, Day 1. Download the app below to start for real.`;
   set('[data-hud="demo"]', `Campaign: ${name}`);
   lastLog = "";
   frame();

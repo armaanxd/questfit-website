@@ -18,11 +18,15 @@ The page is a "live surface" built with the scroll-craft skill: it behaves like 
 | `tools/capture-screens.mjs` | Retakes the app screenshots |
 | `tools/record-video.mjs` | Re-records `assets/app-tour.webm` from the running app (`npm run dev` in `~/Projects/questfit`) |
 | `scrollcraft/` | The build brief and the fingerprint registry the skill checks new builds against |
+| `fun.js` | The play layer: the live app phone, the stakes simulator, card spotlights and the level-up burst |
+| `tools/build-demo.sh` | Builds the real app from `~/Projects/questfit` into `app/` (git-ignored, ~17 MB) for "Play the real app". Rerun after app changes and before deploying |
+| `assets/questfit.apk` | The signed Android build behind "Download for Android" (git-ignored: copy it in from `~/Projects/questfit/android/app/build/outputs/apk/release/`) |
 
 ## View it locally
 
 ```bash
 cd ~/Projects/questfit-website
+./tools/build-demo.sh   # once, and after app changes
 python3 -m http.server 8080
 ```
 
