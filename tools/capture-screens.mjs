@@ -7,7 +7,11 @@ const url = process.argv[3] || 'http://localhost:5173/';
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH });
 const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
 const p = await ctx.newPage(); p.on('dialog', d => d.dismiss());
-await p.clock.install({ time: new Date('2026-11-02T10:00:00') }); // fake clock, so a 20-minute session takes no real time
+// Fake the date only (10:00 today) and leave timers real: a fully frozen clock also froze the app's Motion
+// animations, so views stayed invisible. Skipping ahead moves the date, which is all the session timer reads.
+let now = new Date(); now.setHours(10, 0, 0, 0); now = now.getTime();
+await p.clock.setSystemTime(now);
+const skip = async (ms) => { now += ms; await p.clock.setSystemTime(now); await p.waitForTimeout(1100); };
 await p.goto(url); await p.waitForTimeout(400);
 await p.click('[data-action=create-account]'); await p.waitForTimeout(300);
 await p.fill('input[name=name]', 'Kael');
@@ -15,7 +19,7 @@ await p.click('#onboarding-form button[type=submit]'); await p.waitForTimeout(50
 const quests = async () => { await p.click('.sidebar [data-view=quests]'); await p.waitForTimeout(300); };
 await quests();
 await p.locator('#quests-view [data-action=start-session]').first().click();
-await p.clock.fastForward('20:00');
+await skip(20 * 60000);
 await p.click('#quests-view [data-action=finish-session]'); await p.waitForTimeout(300);
 await p.locator('#quests-view .manual-log').first().locator('summary').click();
 await p.locator('#quests-view .log-form').first().locator('input').fill('2000');
@@ -23,7 +27,7 @@ await p.locator('#quests-view .log-form').first().locator('button[type=submit]')
 for (let set = 0; set < 2; set += 1) {
   await quests();
   await p.click('#quests-view [data-action=set-done]');
-  await p.clock.fastForward('00:31');
+  await skip(31000);
 }
 for (const v of ['dashboard', 'quests', 'stats', 'character']) {
   await p.click(`.sidebar [data-view=${v}]`); await p.waitForTimeout(500);

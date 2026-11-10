@@ -14,9 +14,9 @@ The page is a "live surface" built with the scroll-craft skill: it behaves like 
 | `privacy.html` | Privacy policy (draft, see below) |
 | `assets/` | App screenshots, favicon, and `jd-hero.webp` and `jd-aloof/grudging/warm/proud.webp` (transparent still renders of JD; retake them if the model or poses change) |
 | `assets/jdpose.js`, `assets/jdvoice.js`, `assets/models/jd.vrm` | JD. `jdpose.js` and `jdvoice.js` are copied from `~/Projects/questfit` (keep in step). Model: "AvatarSample_C" by pixiv VRoid Project, credit required, no modification. Phones, reduced motion and save data keep the still image |
-| `assets/app-tour.webm` | The 30-second video in "The app" (a screen recording of the app) |
+| `assets/app-tour.mp4`, `assets/app-tour.webm` | The 30-second video in "The app" (a screen recording of the app). The MP4 is for Safari |
 | `tools/capture-screens.mjs` | Retakes the app screenshots |
-| `tools/record-video.mjs` | Re-records `assets/app-tour.webm` from the running app (`npm run dev` in `~/Projects/questfit`) |
+| `tools/record-video.mjs` | Re-records both videos from the running app. Start the app with `npx vite --host 127.0.0.1` in `~/Projects/questfit` (`npm run dev` opens it to the whole network). The MP4 needs Homebrew's `ffmpeg` |
 | `scrollcraft/` | The build brief and the fingerprint registry the skill checks new builds against |
 | `fun.js` | The play layer: the live app phone, the stakes simulator, card spotlights and the level-up burst |
 | `tools/build-demo.sh` | Builds the real app from `~/Projects/questfit` into `app/` (git-ignored, ~17 MB) for "Play the real app". Rerun after app changes and before deploying |

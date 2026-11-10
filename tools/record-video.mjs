@@ -9,7 +9,11 @@ const out = new URL('../assets/app-tour.webm', import.meta.url).pathname;
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH, args: ['--force-device-scale-factor=2', '--window-size=390,1154'] });
 const ctx = await b.newContext({ viewport: null });
 const p = await ctx.newPage(); p.on('dialog', d => d.dismiss());
-await p.clock.install({ time: new Date('2026-11-02T10:00:00') }); // fake clock, so a 20-minute session takes no real time
+// Fake the date only (10:00 today) and leave timers real: a fully frozen clock also froze the app's Motion
+// animations, so views stayed invisible. Skipping ahead moves the date, which is all the session timer reads.
+let now = new Date(); now.setHours(10, 0, 0, 0); now = now.getTime();
+await p.clock.setSystemTime(now);
+const skip = async (ms) => { now += ms; await p.clock.setSystemTime(now); await p.waitForTimeout(1100); };
 
 // Capture CDP screencast frames and re-time them to a steady 25 fps ourselves.
 const frames = [];
@@ -39,8 +43,8 @@ await glide(420); await pause(1200); await glide(0); await pause(600);
 
 await view('quests', 1500);
 await p.locator('#quests-view [data-action=start-session]').first().click(); await pause(1200);
-await p.clock.fastForward('10:00'); await pause(1200);
-await p.clock.fastForward('10:00'); await pause(900);
+await skip(10 * 60000); await pause(1200);
+await skip(10 * 60000); await pause(900);
 await p.click('#quests-view [data-action=finish-session]'); await pause(1800);
 await glide(380); await pause(1200); await glide(0); await pause(500);
 
@@ -67,3 +71,8 @@ for (let i = 0; i < total; i += 1) {
 enc.stdin.end();
 await new Promise(r => enc.on('close', r));
 console.log('wrote', out, fs.statSync(out).size, 'bytes,', frames.length, 'captured frames');
+// An H.264 copy for Safari, which can't play every WebM. Needs a full ffmpeg (Homebrew's); Playwright's only does VP8.
+const mp4 = out.replace(/\.webm$/, '.mp4');
+const h264 = spawn(process.env.FFMPEG_FULL || 'ffmpeg', ['-y', '-loglevel', 'error', '-i', out, '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2', '-c:v', 'libx264', '-crf', '26', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', mp4], { stdio: 'inherit' });
+await new Promise(r => h264.on('close', r));
+if (fs.existsSync(mp4)) console.log('wrote', mp4, fs.statSync(mp4).size, 'bytes');
