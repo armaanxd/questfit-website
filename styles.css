@@ -276,7 +276,6 @@ a { color: var(--violet-pale); text-underline-offset: .2em; }
 .legal p, .legal li { color: var(--muted); }
 .legal p, .legal ul { margin-top: .9rem; }
 .legal .updated { margin-top: .75rem; }
-.legal .draft { margin-top: var(--space-s); padding: 1rem 1.25rem; border: 1px solid var(--ember); border-radius: 12px; color: var(--text); }
 
 /* tablet */
 @media (max-width: 900px) {
