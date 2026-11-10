@@ -375,3 +375,5 @@ body.is-live-view .dock { opacity: 0; transform: translateY(8px); pointer-events
   #start .close { justify-content: flex-start; }
   .foot { position: static; margin-top: var(--sc-6); padding-bottom: 5.5rem; } /* clears JD's dock */
 }
+.newgame__req { margin-bottom: var(--sc-2); }
+.newgame__req b { color: var(--sc-ink); }
