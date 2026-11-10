@@ -38,7 +38,7 @@ The page has no store link yet: the closing form says "QuestFit isn't on Google 
 
 ## Before publishing
 
-- `privacy.html` is a draft: review it and remove the draft notice. Contact: contact.questfit@gmail.com (also in the app's `public/privacypolicy.html`).
+- `privacy.html` is a draft: review it and remove the draft notice. Contact: contact.questfit.app@gmail.com (also in the app's `public/privacypolicy.html`).
 - Update the privacy policy before the food log or cloud backup ships. Keep it in step with the app's `public/privacypolicy.html`.
 
 ## Refresh the screenshots
