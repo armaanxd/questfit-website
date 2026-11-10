@@ -5,7 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>QuestFit · your training is the main quest</title>
 <meta name="description" content="QuestFit is a fitness RPG for Android. Clear real workouts, earn XP, rank up from E to S, and win over a guide who starts out unimpressed.">
-<link rel="icon" href="./assets/favicon.svg">
+<link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="./assets/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+<meta name="theme-color" content="#070812">
+<!-- Link previews (WhatsApp, Telegram, X...). Once the site has a domain, make og:image and og:url absolute
+     (https://your-domain/assets/og-image.png): most preview bots ignore relative URLs. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="QuestFit">
+<meta property="og:title" content="QuestFit · your training is the main quest">
+<meta property="og:description" content="A fitness RPG for Android. Clear real workouts, earn XP, rank up from E to S, and win over a guide who starts out unimpressed.">
+<meta property="og:image" content="./assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The QuestFit app icon beside the line: Your training is the main quest.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap">
@@ -34,7 +48,7 @@
       <div><dt>Coins</dt><dd data-hud="coins">0</dd></div>
       <div><dt>Rank</dt><dd>E</dd></div>
     </dl>
-    <a class="btn btn--small hud__cta" href="#start">Start your campaign</a>
+    <a class="btn btn--small hud__cta" href="#start">Get the app</a>
   </div>
   <nav class="tabs" aria-label="Sections">
     <a href="#today">Today</a>
@@ -64,7 +78,11 @@
         <p class="status">Day 1 · <span data-classname>Warrior</span> · demo campaign</p>
         <h1 class="title">Your training is the main quest.</h1>
         <p class="sc-body">QuestFit turns real workouts into an RPG campaign on Android. This page is a demo: scroll to train.</p>
-        <a class="btn" href="#start">Start your campaign</a>
+        <div class="hero__ctas">
+          <a class="btn" href="./assets/questfit.apk" download>Download for Android</a>
+          <a class="btn btn--ghost" href="#start">Start your campaign</a>
+        </div>
+        <p class="fine hero__req">Free · Android 9 or newer · 4 GB of RAM · about 15 MB</p>
       </div>
 
       <section class="board" aria-label="Today's quest board">
