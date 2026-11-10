@@ -367,3 +367,11 @@ body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-event
 body.is-live-view .dock { opacity: 0; transform: translateY(8px); pointer-events: none; }
 .phone { width: clamp(320px, min(86vw, calc((100svh - 10rem) * 0.4737)), 360px); }
 .btn[hidden] { display: none; }
+.tabs a { white-space: nowrap; }
+/* Phones and short screens: the close can't fit form + footer in one pinned screen (it overlapped at 360x691
+   with large system text), so its stage grows with its content and the footer joins the flow. */
+@media (max-width: 860px), (max-height: 760px) {
+  #start .sc-stage { position: relative; height: auto; min-height: 100svh; overflow: visible; }
+  #start .close { justify-content: flex-start; }
+  .foot { position: static; margin-top: var(--sc-6); padding-bottom: 5.5rem; } /* clears JD's dock */
+}

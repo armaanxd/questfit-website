@@ -31,6 +31,8 @@ async function startLive() {
     startButton.textContent = "Live demo unavailable";
     return;
   }
+  // On a phone the frame fills the screen and swallows the page's scroll, so the app opens full screen instead.
+  if (matchMedia("(max-width: 860px), (pointer: coarse)").matches) return void (location.href = "./app/index.html");
   frame.src = "./app/index.html";
   frame.hidden = false;
   phone.classList.add("is-live");
@@ -43,12 +45,15 @@ function resetLive() {
     localStorage.removeItem(SESSION_KEY);
   } catch {}
   frame.src = "about:blank";
-  startLive();
+  phone.classList.remove("is-live");
+  startButton.disabled = false;
+  resetButton.hidden = true;
 }
 
 // JD's dock sits in the same corner, so it steps aside while the phone is on screen
 if (phone) new IntersectionObserver(([e]) => document.body.classList.toggle("is-live-view", e.isIntersecting), { threshold: 0.2 }).observe(phone);
 startButton?.addEventListener("click", startLive);
+try { if (resetButton && localStorage.getItem(STATE_KEY)) resetButton.hidden = false; } catch {}
 resetButton?.addEventListener("click", resetLive);
 
 // ------------------------------------------------------- stakes simulator
