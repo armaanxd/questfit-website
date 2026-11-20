@@ -1,0 +1,108 @@
+<svg width="1200" height="380" viewBox="0 0 1200 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .pulse { animation: pulse 3s ease-in-out infinite; transform-origin: 960px 180px; }
+    .halo { animation: halo 3s ease-in-out infinite; transform-origin: 960px 180px; }
+    .orbit { animation: spin 18s linear infinite; transform-origin: 960px 180px; }
+    .tw { animation: tw 2.4s ease-in-out infinite; }
+    .tw.b { animation-delay: .8s; } .tw.c { animation-delay: 1.6s; }
+    .fill { animation: fill 6s cubic-bezier(.4,0,.2,1) infinite; }
+    .flash { animation: flash 6s ease-out infinite; opacity: 0; }
+    .lv15 { animation: lv15 6s steps(1) infinite; }
+    .lv16 { animation: lv16 6s ease-out infinite; opacity: 0; }
+    .sweep { animation: sweep 4s linear infinite; }
+    @keyframes pulse { 50% { transform: scale(1.06); } }
+    @keyframes halo { 0%,100% { opacity: .35; transform: scale(.92); } 50% { opacity: .7; transform: scale(1.08); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes tw { 0%,100% { opacity: .15; } 50% { opacity: 1; } }
+    @keyframes fill { 0% { width: 0; } 58% { width: 452px; } 64% { width: 460px; } 92% { width: 460px; opacity: 1; } 100% { width: 460px; opacity: 0; } }
+    @keyframes flash { 0%,60% { opacity: 0; } 64% { opacity: .9; } 80% { opacity: 0; } }
+    @keyframes lv15 { 0% { opacity: 1; } 62% { opacity: 0; } }
+    @keyframes lv16 { 0%,61% { opacity: 0; } 66%,94% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes sweep { from { transform: translateX(-300px); } to { transform: translateX(1300px); } }
+  </style>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="380" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#070812"/>
+      <stop offset=".6" stop-color="#100f26"/>
+      <stop offset="1" stop-color="#22143f"/>
+    </linearGradient>
+    <linearGradient id="star" x1="900" y1="120" x2="1020" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d9ccff"/>
+    </linearGradient>
+    <linearGradient id="xp" x1="0" y1="0" x2="460" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6c9cff"/>
+      <stop offset=".55" stop-color="#b8a0ff"/>
+      <stop offset="1" stop-color="#ff6f9e"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="300" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b8a0ff" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#b8a0ff" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#b8a0ff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(960 180) scale(170)">
+      <stop stop-color="#8b6cff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#8b6cff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#b8a0ff" stroke-opacity=".07"/>
+    </pattern>
+    <clipPath id="card"><rect width="1200" height="380" rx="22"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1200" height="380" fill="url(#bg)"/>
+    <rect width="1200" height="380" fill="url(#grid)"/>
+    <rect class="sweep" x="0" y="0" width="300" height="380" fill="url(#beam)" transform="skewX(-12)"/>
+
+    <!-- emblem -->
+    <circle class="halo" cx="960" cy="180" r="170" fill="url(#glow)"/>
+    <g class="orbit">
+      <circle cx="960" cy="180" r="112" stroke="#b8a0ff" stroke-opacity=".35" stroke-width="2" stroke-dasharray="4 10"/>
+      <circle cx="1072" cy="180" r="5" fill="#ff6f9e"/>
+      <circle cx="848" cy="180" r="4" fill="#6c9cff"/>
+    </g>
+    <circle cx="960" cy="180" r="84" stroke="#b8a0ff" stroke-opacity=".7" stroke-width="3" fill="#120a2a" fill-opacity=".6"/>
+    <path class="pulse" d="M960 118C966 166 974 174 1022 180C974 186 966 194 960 242C954 194 946 186 898 180C946 174 954 166 960 118Z" fill="url(#star)"/>
+
+    <!-- twinkles -->
+    <g fill="#d9ccff">
+      <path class="tw" d="M1092 82l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"/>
+      <path class="tw b" d="M836 290l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>
+      <path class="tw c" d="M1120 300l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>
+      <circle class="tw b" cx="620" cy="60" r="2"/>
+      <circle class="tw" cx="740" cy="320" r="1.6"/>
+      <circle class="tw c" cx="1160" cy="190" r="2"/>
+      <circle class="tw" cx="540" cy="110" r="1.4"/>
+    </g>
+
+    <!-- copy -->
+    <text x="80" y="92" fill="#b8a0ff" font-size="15" font-weight="700" letter-spacing="5">Q / F · A FITNESS RPG FOR ANDROID</text>
+    <text x="76" y="166" fill="#f3f1ff" font-size="68" font-weight="800" letter-spacing="2">QuestFit</text>
+    <text x="80" y="206" fill="#9ba0bd" font-size="22">Your training is the main quest.</text>
+
+    <!-- xp bar -->
+    <g transform="translate(80 248)">
+      <text class="lv15" x="0" y="0" fill="#f3f1ff" font-size="15" font-weight="700" letter-spacing="2">LV 15</text>
+      <text class="lv16" x="0" y="0" fill="#ff6f9e" font-size="15" font-weight="800" letter-spacing="2">LV 16 · LEVEL UP!</text>
+      <text x="460" y="0" fill="#9ba0bd" font-size="13" text-anchor="end" letter-spacing="1">XP</text>
+      <rect y="14" width="460" height="14" rx="7" fill="#f3f1ff" fill-opacity=".08"/>
+      <rect class="fill" y="14" width="460" height="14" rx="7" fill="url(#xp)"/>
+      <rect class="flash" x="-6" y="8" width="472" height="26" rx="13" fill="#ff6f9e" fill-opacity=".35"/>
+    </g>
+
+    <!-- classes -->
+    <g transform="translate(80 310)" font-size="13" font-weight="700" letter-spacing="1">
+      <rect width="104" height="30" rx="15" fill="#f4c76b" fill-opacity=".12" stroke="#f4c76b" stroke-opacity=".5"/>
+      <text x="52" y="20" fill="#f4c76b" text-anchor="middle">⚔ WARRIOR</text>
+      <rect x="116" width="100" height="30" rx="15" fill="#6ad4d1" fill-opacity=".12" stroke="#6ad4d1" stroke-opacity=".5"/>
+      <text x="166" y="20" fill="#6ad4d1" text-anchor="middle">➶ RANGER</text>
+      <rect x="228" width="88" height="30" rx="15" fill="#c5a7ff" fill-opacity=".12" stroke="#c5a7ff" stroke-opacity=".5"/>
+      <text x="272" y="20" fill="#c5a7ff" text-anchor="middle">✦ MAGE</text>
+      <rect x="328" width="132" height="30" rx="15" fill="#f08cba" fill-opacity=".12" stroke="#f08cba" stroke-opacity=".5"/>
+      <text x="394" y="20" fill="#f08cba" text-anchor="middle">✹ ALL-ROUNDER</text>
+    </g>
+  </g>
+  <rect x=".5" y=".5" width="1199" height="379" rx="21.5" stroke="#b8a0ff" stroke-opacity=".18"/>
+</svg>
